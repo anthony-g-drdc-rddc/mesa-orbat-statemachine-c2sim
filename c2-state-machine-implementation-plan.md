@@ -27,7 +27,8 @@ The application must:
 - Normalize units, hierarchy, positions, resources, and routes.
 - Initialize one deterministic Mesa run.
 - Execute the ten C2 services in one process.
-- Accept abstract transition decisions through a Python interface, REST endpoint, or scenario script.
+- Generate currently valid transition options and pass them through a polymorphic decision interface.
+- Use the seeded random decision provider as the only decision implementation.
 - Validate every requested transition against explicit guards.
 - Advance unit activities, communications, reports, and resources in Mesa.
 - Record commands, state changes, reports, evidence, and checkpoints.
@@ -36,14 +37,14 @@ The application must:
 
 Use Python 3.12, Mesa 3.5.1, FastAPI, Pydantic 2, SQLAlchemy 2, Alembic, pyproj, and SQLite in WAL mode. Run one backend worker and one authoritative simulation process.
 
-Use a fixed simulation interval of 1000 milliseconds. Use deterministic seeds and stable ordering. Pin all dependencies.
+Use a fixed simulation interval of 1000 milliseconds. Use separate deterministic seeds for Mesa and the decision provider. Use stable ordering and pin all dependencies.
 
 ## 3. Architecture
 
 ```mermaid
 flowchart TD
     OI["ORBAT scenario file"] --> A["Scenario adapter"]
-    D["Abstract decision provider"] --> C["C2 coordinator"]
+    D["Random decision provider"] --> C["C2 coordinator"]
     A --> C
     C --> S["Ten C2 services"]
     C --> M["Mesa model"]
@@ -59,7 +60,7 @@ The coordinator is the only state writer. It serializes decisions, scheduled mes
 
 The C2 services own mission, plan, task, force, report, and mobility records. Mesa owns simulated movement, activity progress, actual resources, and physical conditions.
 
-The decision provider selects requested transitions. It cannot write records directly. The coordinator checks a request, evaluates guards, and either commits the complete transition set or rejects it.
+The coordinator generates valid transition options from the registered state machines and current evidence. The decision provider selects one option. It cannot write records directly. The coordinator rechecks the selected option and either commits the complete transition set or rejects it.
 
 ## 4. ORBAT Mapper use without modification
 
@@ -88,51 +89,127 @@ Use a projected coordinate system in metres for simulation calculations. Convert
 
 This file exchange is the complete ORBAT integration. There is no ORBAT source modification, custom panel, browser store, embedded control, streaming bridge, or ORBAT-specific plugin.
 
-## 5. Abstract commander role
+## 5. Decision-provider contract
 
-The runtime treats the commander as a decision provider. The provider can be a deterministic scenario script, external program, rule-based component, or later reasoning system. Its internal logic is outside this implementation.
+The coordinator is responsible for finding possible transitions. The decision provider is responsible only for choosing one of them.
 
-It receives an immutable decision context containing:
+Before every choice, the coordinator evaluates the transition registries and their guards against the latest committed state. It creates one immutable `DecisionInput`. Each `DecisionOption` represents a complete, atomic way to align the affected state machines.
 
-- Current mission state and revision.
-- Approved plan version.
-- Relevant task states and versions.
-- Service readiness facts.
-- Open decision points.
-- Delivered reports and evidence identifiers.
-- Available transitions and failed guard explanations.
+An option can contain one intent, such as moving a mission from `ORGANIZING` to `REVIEWING_SITUATION`. It can also contain several linked intents, such as moving the mission to `PLANNING_TASKS`, preserving unaffected tasks, and assigning an explicit disposition to a blocked task.
 
-It returns one decision batch with one or more transition intents:
+Use these exact domain signatures:
 
 ```python
 from dataclasses import dataclass
 from typing import Protocol
 
 @dataclass(frozen=True)
+class MachineState:
+    machine_type: str
+    machine_id: str
+    current_state: str
+    revision: int
+
+@dataclass(frozen=True)
 class TransitionIntent:
     machine_type: str
     machine_id: str
     expected_revision: int
+    from_state: str
     target_state: str
-    reason: str
 
 @dataclass(frozen=True)
-class DecisionBatch:
-    decision_id: str
+class DecisionOption:
+    option_id: str
     intents: tuple[TransitionIntent, ...]
+    evidence_ids: tuple[str, ...]
+
+@dataclass(frozen=True)
+class DecisionInput:
+    decision_id: str
+    run_id: str
+    commit_seq: int
+    simulation_time_ms: int
+    machines: tuple[MachineState, ...]
+    options: tuple[DecisionOption, ...]
+
+@dataclass(frozen=True)
+class DecisionOutput:
+    decision_id: str
+    provider_id: str
+    provider_version: str
+    selected_option_id: str
+    random_draw_index: int
 
 class DecisionProvider(Protocol):
-    def decide(self, context: "DecisionContext") -> DecisionBatch:
+    @property
+    def provider_id(self) -> str:
+        ...
+
+    @property
+    def provider_version(self) -> str:
+        ...
+
+    def choose(self, decision: DecisionInput) -> DecisionOutput:
         ...
 ```
 
-The provider aligns services by selecting a coherent next state for the mission and any affected task machines. For example, a blocked engineering task can cause a batch that moves the mission to `PLANNING_TASKS`, keeps unaffected air and maritime tasks unchanged, and requests replacement or cancellation of the affected land task.
+The input fields have these meanings:
 
-The coordinator applies a batch atomically. Every intent must use the expected revision, name a registered transition, and pass its guards. If one required intent fails, the batch is rejected without a partial state change.
+- `decision_id` uniquely identifies one choice.
+- `run_id` identifies the authoritative run.
+- `commit_seq` identifies the committed state used to construct the choice.
+- `simulation_time_ms` is the simulated time of that state.
+- `machines` contains the current state and revision of every machine affected by at least one option.
+- `options` contains all command-level alignment choices whose guards pass at input creation time.
+- `option_id` is stable within the decision and is derived from canonical intent content.
+- `evidence_ids` identifies the reports, approvals, or conditions that made the option valid.
 
-The decision provider cannot advance time, modify agents, create evidence, bypass resources, or declare completion without evidence.
+The output selects exactly one input option. It does not repeat or modify transition intents. The coordinator rejects an output when the decision ID does not match, the provider identity is unexpected, or the selected option ID is absent from the input.
 
-Acknowledgement, acceptance, block, and completion transitions are driven by delivered reports. The decision provider supplies command direction: approve, dispatch, authorize, continue, pause, replan, cancel, or complete. Evidence determines whether that direction is valid.
+The coordinator then rechecks every intent against the latest revision and guards. It commits all intents in the selected option atomically. If state changed after input creation, the selection is rejected as stale and a new input is generated.
+
+The coordinator never calls the provider with zero options. A nonterminal machine with no valid option produces a `DecisionStalled` event containing its failed guards. Terminal machines do not request decisions.
+
+### 5.1 Random decision provider
+
+Implement only `RandomDecisionProvider` in the first release. The polymorphic interface makes replacement possible later, but this plan includes no other provider implementation and no provider-loading mechanism.
+
+```python
+import random
+
+class RandomDecisionProvider:
+    provider_id = "random"
+    provider_version = "1.0.0"
+
+    def __init__(self, seed: int) -> None:
+        self._rng = random.Random(seed)
+
+    def choose(self, decision: DecisionInput) -> DecisionOutput:
+        if not decision.options:
+            raise ValueError("DecisionInput.options cannot be empty")
+
+        options = tuple(
+            sorted(decision.options, key=lambda option: option.option_id)
+        )
+        selected_index = self._rng.randrange(len(options))
+
+        return DecisionOutput(
+            decision_id=decision.decision_id,
+            provider_id=self.provider_id,
+            provider_version=self.provider_version,
+            selected_option_id=options[selected_index].option_id,
+            random_draw_index=selected_index,
+        )
+```
+
+The chooser uses a uniform discrete selection over all currently valid options. It uses no weights, priorities, mission goals, heuristics, look-ahead, report interpretation, or state preference.
+
+Sort options by `option_id` before drawing so the same seed and input history produce the same selection stream. Store the decision seed, provider version, complete input, complete output, and random generator state in run provenance and checkpoints.
+
+Random choice does not weaken transition safety. The provider can choose only options that already passed guard evaluation, and the coordinator rechecks them before commit. Randomness affects which permitted state is selected, not whether an invalid transition is allowed.
+
+Acknowledgement, acceptance, block, and completion transitions remain evidence-driven and do not call the provider. The provider is called only when more than one command-level direction can be selected or when the workflow requires an explicit command-level transition. When there is one valid option, the same method selects that option.
 
 ## 6. Ten fixed C2 services
 
@@ -232,7 +309,7 @@ When a new plan is approved:
 - Removed tasks receive an explicit continuation, pause, completion, or cancellation disposition.
 - Resource reservations transfer only after the old activity stops or a declared handover permits transfer.
 
-These rules let a decision batch align the services without directly mutating their internal records.
+These rules let a selected decision option align the services without directly mutating their internal records.
 
 ## 8. Records and guards
 
@@ -269,7 +346,7 @@ For each interval starting at simulated time `T`:
 1. Admit decisions and commands assigned to `T`.
 2. Deliver instructions and reports due at or before `T`.
 3. Update the ten services from delivered evidence.
-4. Evaluate decision batches and transition guards.
+4. Build a `DecisionInput`, call `DecisionProvider.choose()`, and recheck the selected option when a command-level choice is required.
 5. Evaluate task authority, dependencies, pauses, cancellations, and resources.
 6. Let agents propose movement, activity, and resource effects.
 7. Resolve proposals in stable order.
@@ -287,20 +364,64 @@ Planning decisions can commit in `READY` or run `PAUSED` without advancing time.
 
 No human-facing commander application is included.
 
-Provide operations to:
+Run creation accepts the ORBAT scenario file and this configuration:
 
-- Create a run from an ORBAT scenario and C2 configuration.
-- Read run status and revisions.
-- Start, step, pause, resume, and stop the run.
-- Read the current decision context.
-- Submit a decision batch.
-- Read decision outcomes and domain records.
-- Generate ORBAT, GeoJSON, and C2-evidence exports.
-- Create a child run from a compatible checkpoint.
+```python
+from typing import Literal
+from pydantic import BaseModel, Field
 
-Each decision has a unique identifier, expected revisions, target states, and a reason. Store the canonical request before returning acceptance.
+class RandomProviderConfig(BaseModel):
+    type: Literal["random"]
+    seed: int
 
-An identical retry returns the original outcome. Reusing an identifier with different content returns a conflict. A stale decision returns the current revision and available transitions.
+class RunCreateInput(BaseModel):
+    scenario_start_utc: str
+    mesa_seed: int
+    dt_ms: int = Field(gt=0)
+    decision_provider: RandomProviderConfig
+
+class RunCreateOutput(BaseModel):
+    run_id: str
+    lifecycle: Literal["READY"]
+    control_revision: int
+    scenario_hash: str
+    provider_id: str
+    provider_version: str
+```
+
+`RandomProviderConfig` is the only accepted provider configuration in this release. The application composition root constructs `RandomDecisionProvider` and injects it into the coordinator through the `DecisionProvider` protocol.
+
+Expose these machine operations:
+
+- `POST /api/v1/runs` accepts the scenario file and `RunCreateInput`; it returns `RunCreateOutput`.
+- `GET /api/v1/runs/{run_id}` returns lifecycle, control revision, commit sequence, and simulated time.
+- `POST /api/v1/runs/{run_id}/controls` accepts start, step, pause, resume, or stop with the expected control revision.
+- `GET /api/v1/runs/{run_id}/decisions/current` returns the exact `DecisionInput`, or HTTP 204 when no command-level decision is pending.
+- `POST /api/v1/runs/{run_id}/decisions/choose` asks the configured provider to select from the current input.
+- `GET /api/v1/runs/{run_id}/decisions/{decision_id}` returns the stored input, provider output, applied intents, and final outcome.
+- `GET /api/v1/runs/{run_id}/state` returns the committed run, mission, task, unit, and report state.
+- `POST /api/v1/runs/{run_id}/exports` creates an ORBAT scenario, GeoJSON, and C2-evidence export.
+- `POST /api/v1/runs/{run_id}/restores` creates a child run from a compatible checkpoint.
+
+The choose endpoint accepts and returns:
+
+```python
+class DecisionChooseInput(BaseModel):
+    decision_id: str
+    expected_commit_seq: int
+
+class DecisionAppliedOutput(BaseModel):
+    decision: DecisionOutput
+    applied_intents: tuple[TransitionIntent, ...]
+    outcome: Literal["APPLIED", "STALE", "REJECTED"]
+    resulting_commit_seq: int | None
+```
+
+The caller cannot provide an option ID. Calling the endpoint invokes the random provider. Continuous execution invokes the same coordinator operation automatically whenever a decision is pending.
+
+Persist `DecisionInput`, `DecisionOutput`, guard recheck results, and applied intents before acknowledging the completed choice.
+
+An identical choose retry returns the stored outcome without drawing again. A mismatched decision ID or commit sequence is rejected as stale. A second request for an already resolved decision cannot consume another random draw.
 
 Use a configured system identity for the initial headless implementation and retain it in the audit record. Authentication and a human command application are separate concerns.
 
@@ -323,29 +444,28 @@ Create `scenarios/coastal-resupply/` with:
 - The unchanged source ORBAT Mapper scenario.
 - A normalized simulation scenario.
 - C2 objectives, criteria, tasks, dependencies, and timings.
-- A deterministic decision script implementing `DecisionProvider`.
+- A random-provider configuration containing the decision seed.
 - Expected milestones and invariants.
 
 Use `HQ-1`, `INT-1`, `AIR-REC-1`, `AIR-LIFT-1`, `SEA-1`, `ENG-1`, `GROUND-1`, and `POST-1`.
 
-The scenario runs as follows:
+At every command-level decision point, the coordinator enumerates the currently valid options and `RandomDecisionProvider` selects one uniformly. The selected option can continue execution, request more information, pause, replan, complete, or cancel when those transitions are valid.
 
-1. Initialize in `ORGANIZING` and attach forces.
-2. Select `REVIEWING_SITUATION`.
-3. Authorize preliminary intelligence and air observation without starting the main plan.
-4. Select `PLANNING_TASKS` after findings arrive.
-5. Approve and dispatch main plan version 1.
-6. Select `EXECUTING` after required acceptance arrives.
-7. Let engineering discover an unavailable crossing.
-8. Deliver the restriction and enter `COMMANDER_REVIEW`.
-9. Select `PLANNING_TASKS` and approve version 2 with an alternate route.
-10. Preserve unchanged air and maritime tasks and accept the revised land task.
-11. Resume execution and complete delivery.
-12. Enter review when completion evidence is available.
-13. Select `COMPLETED` after receipt and accountability guards pass.
-14. Export the final ORBAT scenario, GeoJSON overlays, and C2 sidecar.
+Because the chooser has no goal or preference, different seeds can produce different mission paths and terminal states. Cancellation, repeated review, and inefficient replanning are valid random outcomes. Safety invariants must hold for every seed.
 
-The deterministic decision script stands in for commander reasoning. It waits for committed conditions and selects target states. It cannot inspect hidden Mesa state or use wall-clock sleeps to decide outcomes.
+After implementation, choose and record one reference seed whose unmodified random stream exercises the intended resupply path:
+
+1. Move from organization through situation review and planning.
+2. Authorize preliminary collection.
+3. Approve, dispatch, and execute main plan version 1.
+4. Receive the unavailable-crossing report and enter review.
+5. Randomly select replanning rather than cancellation or continuation.
+6. Approve version 2 while preserving unaffected tasks.
+7. Resume execution and deliver fifty supply units.
+8. Randomly select completion when its guards become true.
+9. Export the final ORBAT scenario, GeoJSON overlays, C2 sidecar, decision inputs, outputs, and random-provider state.
+
+The reference seed is a reproducible demonstration fixture, not a decision rule. Do not alter available options, add weights, redraw an inconvenient selection, or search for a preferred option during a run. A separate offline fixture-generation step may identify the reference seed and then freeze it in the scenario package.
 
 ## 13. Repository structure
 
@@ -369,7 +489,7 @@ tests/
 deploy/
 ```
 
-Domain code must not import FastAPI, SQLAlchemy, or ORBAT parsing details. The `orbat_io` package converts standard files at the boundary. The `decisions` package contains the protocol and deterministic test implementation.
+Domain code must not import FastAPI, SQLAlchemy, or ORBAT parsing details. The `orbat_io` package converts standard files at the boundary. The `decisions` package contains the provider protocol, decision data types, and the single random implementation.
 
 ## 14. Implementation phases
 
@@ -387,13 +507,13 @@ Exit when a headless fixture reproduces the same state from the same inputs and 
 
 ### Phase 3 — C2 services and state machines
 
-Implement the ten services, transition registries, task lifecycle, plan versions, dependency validation, reservations, reports, mobility knowledge, decision points, decision context, and atomic batch handler.
+Implement the ten services, transition registries, task lifecycle, plan versions, dependency validation, reservations, reports, mobility knowledge, decision-option generator, typed provider contract, seeded `RandomDecisionProvider`, and atomic option handler.
 
-Exit when permitted and rejected transitions behave correctly, stale decisions fail, version authority is enforced, and a rejected batch leaves no partial change.
+Exit when permitted and rejected transitions behave correctly, input and output contracts validate, the same seed and ordered inputs reproduce the same choices, stale selections fail, and a rejected option leaves no partial change.
 
 ### Phase 4 — Complete demonstration
 
-Connect task records to Mesa activities. Implement delayed acknowledgement, acceptance, start, progress, block, completion, pause, and cancellation reports. Add the resupply package and decision script.
+Connect task records to Mesa activities. Implement delayed acknowledgement, acceptance, start, progress, block, completion, pause, and cancellation reports. Add the resupply package, random-provider configuration, and recorded reference seed.
 
 Exit when the crossing causes review, the revision preserves unaffected tasks, fifty supply units arrive exactly once, and completion requires receipt and accountability evidence.
 
@@ -405,6 +525,11 @@ Exit when a fresh checkout runs the demonstration headlessly, survives process r
 
 ## 15. Acceptance criteria
 
+- `DecisionInput` contains only options whose guards pass against its stated commit sequence.
+- `RandomDecisionProvider` selects only from the supplied options and uses no scoring or weighting.
+- The same decision seed and ordered input sequence reproduce the same outputs.
+- Decision input, selected index, selected option, provider version, and generator state survive checkpoint and restore.
+- A repeated choose request returns the stored output and consumes no new random draw.
 - Duplicate decisions and commands produce one effect.
 - Competing decisions using one expected revision cannot both succeed.
 - Invalid target states fail before mutation.
@@ -427,9 +552,9 @@ Exit when a fresh checkout runs the demonstration headlessly, survives process r
 
 ## 16. Definition of done
 
-The work is complete when the headless runtime imports a standard ORBAT Mapper scenario, executes the resupply mission through all ten services, accepts abstract decisions that align mission and task machines, preserves deterministic and recoverable Mesa state, and exports results that standard ORBAT Mapper can open.
+The work is complete when the headless runtime imports a standard ORBAT Mapper scenario, executes the resupply mission through all ten services, generates valid alignment options, selects among them through the polymorphic provider interface, preserves deterministic and recoverable Mesa state, and exports results that standard ORBAT Mapper can open.
 
-The implementation contains no ORBAT extension, plugin mechanism, or embedded commander reasoning. The external decision provider chooses requested next states. The coordinator enforces state-machine rules. Mesa determines simulated effects. ORBAT Mapper remains an unchanged file-based authoring and visualization tool.
+The only provider implementation is the seeded `RandomDecisionProvider`. It chooses uniformly and has no embedded commander reasoning. The coordinator enforces state-machine rules. Mesa determines simulated effects. ORBAT Mapper remains an unchanged file-based authoring and visualization tool.
 
 ## References
 
