@@ -1,17 +1,29 @@
 services:
+  orbat-mapper:
+    build:
+      context: ..
+      dockerfile: orbat-mapper/Dockerfile
+    ports:
+      - "127.0.0.1:6159:8080"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/')"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
   c2sim:
     build:
       context: ..
       dockerfile: deploy/Dockerfile
     ports:
-      - "127.0.0.1:8000:8000"
+      - "127.0.0.1:6158:6158"
     environment:
       C2SIM_SYSTEM_IDENTITY: headless-system
     volumes:
       - c2sim-data:/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:6158/health')"]
       interval: 10s
       timeout: 3s
       retries: 3

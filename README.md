@@ -25,12 +25,12 @@ All runs persist in `.data/c2sim.sqlite` by default. Full dependency versions, i
 uv run c2sim serve
 ```
 
-The machine API is at `http://127.0.0.1:8000`; its OpenAPI documentation is at `/docs`. There is no commander application. Start and resume enable continuous execution at an accelerated wall-clock rate; each interval always represents 1000 simulated milliseconds. Step advances exactly one interval. Run pause freezes time and delivery; explicit step is still available while paused.
+The machine API is at `http://127.0.0.1:6158`; its OpenAPI documentation is at `/docs`. There is no commander application. Start and resume enable continuous execution at an accelerated wall-clock rate; each interval always represents 1000 simulated milliseconds. Step advances exactly one interval. Run pause freezes time and delivery; explicit step is still available while paused.
 
 Create a run with three multipart fields. The native ORBAT document supplies organization and geography; `mission` supplies the declarative C2 objectives, tasks, timings and simulation parameters that ORBAT does not represent:
 
 ```bash
-curl -X POST http://127.0.0.1:8000/api/v1/runs \
+curl -X POST http://127.0.0.1:6158/api/v1/runs \
   -F 'scenario=@scenarios/coastal-resupply/source.orbat.json;type=application/json' \
   -F 'config=<scenarios/coastal-resupply/run-config.json' \
   -F 'mission=<scenarios/coastal-resupply/mission.json'
@@ -39,7 +39,7 @@ curl -X POST http://127.0.0.1:8000/api/v1/runs \
 Use the returned run ID and current control revision:
 
 ```bash
-curl -X POST http://127.0.0.1:8000/api/v1/runs/RUN_ID/controls \
+curl -X POST http://127.0.0.1:6158/api/v1/runs/RUN_ID/controls \
   -H 'Content-Type: application/json' \
   -d '{"command_id":"start-1","action":"start","expected_control_revision":0}'
 ```
@@ -51,6 +51,8 @@ The API supports run summaries, full committed state, current and recorded decis
 A `READY` or run-`PAUSED` execution can accept a decision through `/decisions/choose` without advancing simulation time. Decisions only occur at workflow gates and delivered decision points; the runtime does not repeatedly draw while waiting for a report. The random provider selects uniformly from every permitted command-level option at each such point, including cancellation. A mission pause sends explicit delayed dispositions and prevents new starts; it is distinct from freezing the whole run.
 
 ## Use ORBAT Mapper unchanged
+
+Run `docker compose -f deploy/compose.yaml up --build -d` and open **http://localhost:6159/**. The unchanged official release is packaged by [`orbat-mapper/`](orbat-mapper/README.md), which includes detailed installation and import/export instructions. The backend API documentation remains at **http://localhost:6158/docs**.
 
 1. Open `scenarios/coastal-resupply/source.orbat.json` in standard ORBAT Mapper, or author another native 3.x scenario.
 2. Supply that file and a matching `mission.json` to the runtime.
@@ -88,6 +90,8 @@ Restore retains the parent run and checkpoint references. Branch-local run and d
 ```bash
 docker compose -f deploy/compose.yaml up --build
 ```
+
+Compose starts the ORBAT Mapper interface at **http://localhost:6159/** alongside the backend. Use `docker compose -f deploy/compose.yaml up --build c2sim` if you only want the backend.
 
 The named `c2sim-data` volume retains the database and exports across container replacement. The service runs as an unprivileged user and binds its host port to loopback. The configured system identity is written to audit records. Authentication is outside this initial headless implementation.
 

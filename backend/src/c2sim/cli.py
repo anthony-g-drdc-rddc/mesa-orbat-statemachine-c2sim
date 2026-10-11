@@ -28,7 +28,7 @@ def main():
     restore.add_argument("checkpoint", type=int)
     serve = sub.add_parser("serve")
     serve.add_argument("--host", default="127.0.0.1")
-    serve.add_argument("--port", type=int, default=8000)
+    serve.add_argument("--port", type=int, default=6158)
     args = parser.parse_args()
     if args.command == "serve":
         import uvicorn
