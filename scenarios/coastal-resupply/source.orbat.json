@@ -1,0 +1,308 @@
+{
+  "id": "coastal-resupply",
+  "type": "ORBAT-mapper",
+  "version": "3.7.0",
+  "name": "Coastal resupply",
+  "startTime": "2026-10-11T00:00:00Z",
+  "timeZone": "UTC",
+  "symbologyStandard": "2525d",
+  "sides": [
+    {
+      "id": "blue",
+      "name": "Blue",
+      "standardIdentity": "3",
+      "groups": [
+        {
+          "id": "joint-force",
+          "name": "Joint force",
+          "subUnits": [
+            {
+              "id": "HQ-1",
+              "name": "HQ-1",
+              "sidc": "10031000001211000000",
+              "location": [
+                -1.1,
+                50.7
+              ],
+              "supplies": [
+                {
+                  "name": "fuel",
+                  "count": 1000
+                },
+                {
+                  "name": "supply",
+                  "count": 0
+                }
+              ],
+              "subUnits": [
+                {
+                  "id": "INT-1",
+                  "name": "INT-1",
+                  "sidc": "10031000001211000000",
+                  "location": [
+                    -1.1,
+                    50.7
+                  ],
+                  "supplies": [
+                    {
+                      "name": "fuel",
+                      "count": 1000
+                    },
+                    {
+                      "name": "supply",
+                      "count": 0
+                    }
+                  ],
+                  "subUnits": [],
+                  "state": []
+                },
+                {
+                  "id": "AIR-REC-1",
+                  "name": "AIR-REC-1",
+                  "sidc": "10031000001211000000",
+                  "location": [
+                    -1.1,
+                    50.7
+                  ],
+                  "supplies": [
+                    {
+                      "name": "fuel",
+                      "count": 1000
+                    },
+                    {
+                      "name": "supply",
+                      "count": 0
+                    }
+                  ],
+                  "subUnits": [],
+                  "state": []
+                },
+                {
+                  "id": "AIR-LIFT-1",
+                  "name": "AIR-LIFT-1",
+                  "sidc": "10031000001211000000",
+                  "location": [
+                    -1.1,
+                    50.7
+                  ],
+                  "supplies": [
+                    {
+                      "name": "fuel",
+                      "count": 1000
+                    },
+                    {
+                      "name": "supply",
+                      "count": 10
+                    }
+                  ],
+                  "subUnits": [],
+                  "state": []
+                },
+                {
+                  "id": "SEA-1",
+                  "name": "SEA-1",
+                  "sidc": "10031000001211000000",
+                  "location": [
+                    -1.1,
+                    50.7
+                  ],
+                  "supplies": [
+                    {
+                      "name": "fuel",
+                      "count": 1000
+                    },
+                    {
+                      "name": "supply",
+                      "count": 40
+                    }
+                  ],
+                  "subUnits": [],
+                  "state": []
+                },
+                {
+                  "id": "ENG-1",
+                  "name": "ENG-1",
+                  "sidc": "10031000001211000000",
+                  "location": [
+                    -1.099,
+                    50.7
+                  ],
+                  "supplies": [
+                    {
+                      "name": "fuel",
+                      "count": 1000
+                    },
+                    {
+                      "name": "supply",
+                      "count": 0
+                    }
+                  ],
+                  "subUnits": [],
+                  "state": []
+                },
+                {
+                  "id": "GROUND-1",
+                  "name": "GROUND-1",
+                  "sidc": "10031000001211000000",
+                  "location": [
+                    -1.099,
+                    50.7
+                  ],
+                  "supplies": [
+                    {
+                      "name": "fuel",
+                      "count": 1000
+                    },
+                    {
+                      "name": "supply",
+                      "count": 0
+                    }
+                  ],
+                  "subUnits": [],
+                  "state": []
+                },
+                {
+                  "id": "POST-1",
+                  "name": "POST-1",
+                  "sidc": "10031000001211000000",
+                  "location": [
+                    -1.098,
+                    50.7
+                  ],
+                  "supplies": [
+                    {
+                      "name": "fuel",
+                      "count": 1000
+                    },
+                    {
+                      "name": "supply",
+                      "count": 0
+                    }
+                  ],
+                  "subUnits": [],
+                  "state": []
+                }
+              ],
+              "state": []
+            }
+          ]
+        }
+      ],
+      "subUnits": []
+    }
+  ],
+  "events": [],
+  "layerStack": [
+    {
+      "id": "routes",
+      "name": "Routes",
+      "kind": "overlay",
+      "items": [
+        {
+          "id": "air-route",
+          "kind": "geometry",
+          "name": "air-route",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -1.1,
+                50.7
+              ],
+              [
+                -1.098,
+                50.7
+              ]
+            ]
+          },
+          "geometryMeta": {
+            "type": "LineString"
+          },
+          "style": {}
+        },
+        {
+          "id": "sea-route",
+          "kind": "geometry",
+          "name": "sea-route",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -1.1,
+                50.7
+              ],
+              [
+                -1.099,
+                50.7
+              ]
+            ]
+          },
+          "geometryMeta": {
+            "type": "LineString"
+          },
+          "style": {}
+        },
+        {
+          "id": "crossing",
+          "kind": "geometry",
+          "name": "crossing",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -1.099,
+                50.7
+              ],
+              [
+                -1.098,
+                50.7
+              ]
+            ]
+          },
+          "geometryMeta": {
+            "type": "LineString"
+          },
+          "style": {}
+        },
+        {
+          "id": "detour",
+          "kind": "geometry",
+          "name": "detour",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                -1.099,
+                50.7
+              ],
+              [
+                -1.099,
+                50.7005
+              ],
+              [
+                -1.098,
+                50.7005
+              ],
+              [
+                -1.098,
+                50.7
+              ]
+            ]
+          },
+          "geometryMeta": {
+            "type": "LineString"
+          },
+          "style": {}
+        }
+      ]
+    }
+  ],
+  "supplyCategories": [
+    {
+      "name": "fuel"
+    },
+    {
+      "name": "supply"
+    }
+  ]
+}

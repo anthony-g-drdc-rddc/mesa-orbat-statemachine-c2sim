@@ -1,0 +1,429 @@
+{
+  "$defs": {
+    "PlanSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "minimum": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "tasks": {
+          "items": {
+            "$ref": "#/$defs/TaskSpec"
+          },
+          "title": "Tasks",
+          "type": "array"
+        },
+        "trigger_report": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Trigger Report"
+        },
+        "removed_dispositions": {
+          "additionalProperties": {
+            "enum": [
+              "continue",
+              "pause",
+              "cancel",
+              "complete"
+            ],
+            "type": "string"
+          },
+          "title": "Removed Dispositions",
+          "type": "object"
+        }
+      },
+      "required": [
+        "version",
+        "tasks"
+      ],
+      "title": "PlanSpec",
+      "type": "object"
+    },
+    "Predicate": {
+      "additionalProperties": false,
+      "properties": {
+        "op": {
+          "enum": [
+            "all_of",
+            "any_of",
+            "task_completed",
+            "report_confirmed",
+            "supply_received",
+            "element_accounted_for"
+          ],
+          "title": "Op",
+          "type": "string"
+        },
+        "args": {
+          "items": {
+            "$ref": "#/$defs/Predicate"
+          },
+          "title": "Args",
+          "type": "array"
+        },
+        "ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ref"
+        },
+        "amount": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Amount"
+        }
+      },
+      "required": [
+        "op"
+      ],
+      "title": "Predicate",
+      "type": "object"
+    },
+    "RouteConditionChange": {
+      "additionalProperties": false,
+      "properties": {
+        "time_ms": {
+          "minimum": 0,
+          "title": "Time Ms",
+          "type": "integer"
+        },
+        "route_id": {
+          "title": "Route Id",
+          "type": "string"
+        },
+        "blocked": {
+          "title": "Blocked",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "time_ms",
+        "route_id",
+        "blocked"
+      ],
+      "title": "RouteConditionChange",
+      "type": "object"
+    },
+    "TaskSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "version": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "domain": {
+          "enum": [
+            "intelligence",
+            "air",
+            "navy",
+            "army"
+          ],
+          "title": "Domain",
+          "type": "string"
+        },
+        "unit_id": {
+          "title": "Unit Id",
+          "type": "string"
+        },
+        "activity": {
+          "enum": [
+            "move",
+            "wait",
+            "inspect",
+            "collect",
+            "load",
+            "unload",
+            "deliver"
+          ],
+          "title": "Activity",
+          "type": "string"
+        },
+        "route_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Route Id"
+        },
+        "duration_ms": {
+          "default": 1000,
+          "minimum": 0,
+          "title": "Duration Ms",
+          "type": "integer"
+        },
+        "dependencies": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Dependencies",
+          "type": "array"
+        },
+        "preliminary": {
+          "default": false,
+          "title": "Preliminary",
+          "type": "boolean"
+        },
+        "initial": {
+          "default": true,
+          "title": "Initial",
+          "type": "boolean"
+        },
+        "supply_amount": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Supply Amount",
+          "type": "number"
+        },
+        "transfer_to": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Transfer To"
+        },
+        "finding": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Finding"
+        },
+        "priority": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Priority",
+          "type": "integer"
+        },
+        "deadline_ms": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Deadline Ms"
+        }
+      },
+      "required": [
+        "id",
+        "domain",
+        "unit_id",
+        "activity"
+      ],
+      "title": "TaskSpec",
+      "type": "object"
+    },
+    "Timings": {
+      "additionalProperties": false,
+      "properties": {
+        "communication_delay_ms": {
+          "default": 1000,
+          "minimum": 0,
+          "title": "Communication Delay Ms",
+          "type": "integer"
+        },
+        "position_period_ms": {
+          "default": 5000,
+          "exclusiveMinimum": 0,
+          "title": "Position Period Ms",
+          "type": "integer"
+        },
+        "stale_after_ms": {
+          "default": 15000,
+          "exclusiveMinimum": 0,
+          "title": "Stale After Ms",
+          "type": "integer"
+        }
+      },
+      "title": "Timings",
+      "type": "object"
+    },
+    "UnitConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "domain": {
+          "enum": [
+            "organization",
+            "intelligence",
+            "air",
+            "navy",
+            "army"
+          ],
+          "title": "Domain",
+          "type": "string"
+        },
+        "speed_mps": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Speed Mps",
+          "type": "number"
+        },
+        "fuel_per_second": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Fuel Per Second",
+          "type": "number"
+        }
+      },
+      "required": [
+        "domain"
+      ],
+      "title": "UnitConfig",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "mission_id": {
+      "title": "Mission Id",
+      "type": "string"
+    },
+    "objectives": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Objectives",
+      "type": "array"
+    },
+    "criteria": {
+      "$ref": "#/$defs/Predicate"
+    },
+    "projected_crs": {
+      "title": "Projected Crs",
+      "type": "string"
+    },
+    "area_wgs84": {
+      "maxItems": 4,
+      "minItems": 4,
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "title": "Area Wgs84",
+      "type": "array"
+    },
+    "unit_config": {
+      "additionalProperties": {
+        "$ref": "#/$defs/UnitConfig"
+      },
+      "title": "Unit Config",
+      "type": "object"
+    },
+    "preliminary_tasks": {
+      "items": {
+        "$ref": "#/$defs/TaskSpec"
+      },
+      "title": "Preliminary Tasks",
+      "type": "array"
+    },
+    "plans": {
+      "items": {
+        "$ref": "#/$defs/PlanSpec"
+      },
+      "minItems": 1,
+      "title": "Plans",
+      "type": "array"
+    },
+    "actual_blocked_routes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Actual Blocked Routes",
+      "type": "array"
+    },
+    "route_condition_changes": {
+      "items": {
+        "$ref": "#/$defs/RouteConditionChange"
+      },
+      "title": "Route Condition Changes",
+      "type": "array"
+    },
+    "accepted_information_gaps": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Accepted Information Gaps",
+      "type": "array"
+    },
+    "timings": {
+      "$ref": "#/$defs/Timings"
+    }
+  },
+  "required": [
+    "mission_id",
+    "objectives",
+    "criteria",
+    "projected_crs",
+    "area_wgs84",
+    "unit_config",
+    "plans"
+  ],
+  "title": "ScenarioSpec",
+  "type": "object"
+}

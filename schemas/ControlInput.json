@@ -1,0 +1,33 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "command_id": {
+      "minLength": 1,
+      "title": "Command Id",
+      "type": "string"
+    },
+    "action": {
+      "enum": [
+        "start",
+        "step",
+        "pause",
+        "resume",
+        "stop"
+      ],
+      "title": "Action",
+      "type": "string"
+    },
+    "expected_control_revision": {
+      "minimum": 0,
+      "title": "Expected Control Revision",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "command_id",
+    "action",
+    "expected_control_revision"
+  ],
+  "title": "ControlInput",
+  "type": "object"
+}

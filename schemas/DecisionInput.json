@@ -1,0 +1,136 @@
+{
+  "$defs": {
+    "DecisionOption": {
+      "properties": {
+        "option_id": {
+          "title": "Option Id",
+          "type": "string"
+        },
+        "intents": {
+          "items": {
+            "$ref": "#/$defs/TransitionIntent"
+          },
+          "title": "Intents",
+          "type": "array"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "option_id",
+        "intents",
+        "evidence_ids"
+      ],
+      "title": "DecisionOption",
+      "type": "object"
+    },
+    "MachineState": {
+      "properties": {
+        "machine_type": {
+          "title": "Machine Type",
+          "type": "string"
+        },
+        "machine_id": {
+          "title": "Machine Id",
+          "type": "string"
+        },
+        "current_state": {
+          "title": "Current State",
+          "type": "string"
+        },
+        "revision": {
+          "title": "Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "machine_type",
+        "machine_id",
+        "current_state",
+        "revision"
+      ],
+      "title": "MachineState",
+      "type": "object"
+    },
+    "TransitionIntent": {
+      "properties": {
+        "machine_type": {
+          "title": "Machine Type",
+          "type": "string"
+        },
+        "machine_id": {
+          "title": "Machine Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "from_state": {
+          "title": "From State",
+          "type": "string"
+        },
+        "target_state": {
+          "title": "Target State",
+          "type": "string"
+        }
+      },
+      "required": [
+        "machine_type",
+        "machine_id",
+        "expected_revision",
+        "from_state",
+        "target_state"
+      ],
+      "title": "TransitionIntent",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "decision_id": {
+      "title": "Decision Id",
+      "type": "string"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "commit_seq": {
+      "title": "Commit Seq",
+      "type": "integer"
+    },
+    "simulation_time_ms": {
+      "title": "Simulation Time Ms",
+      "type": "integer"
+    },
+    "machines": {
+      "items": {
+        "$ref": "#/$defs/MachineState"
+      },
+      "title": "Machines",
+      "type": "array"
+    },
+    "options": {
+      "items": {
+        "$ref": "#/$defs/DecisionOption"
+      },
+      "title": "Options",
+      "type": "array"
+    }
+  },
+  "required": [
+    "decision_id",
+    "run_id",
+    "commit_seq",
+    "simulation_time_ms",
+    "machines",
+    "options"
+  ],
+  "title": "DecisionInput",
+  "type": "object"
+}

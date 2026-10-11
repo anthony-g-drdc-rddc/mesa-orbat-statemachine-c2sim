@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mesa-c2sim"
+version = "0.1.0"
+description = "Deterministic headless Mesa C2 state machines with native ORBAT file exchange"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "mesa==3.5.1",
+  "fastapi==0.119.0",
+  "pydantic==2.12.3",
+  "sqlalchemy==2.0.44",
+  "alembic==1.17.0",
+  "pyproj==3.7.2",
+  "uvicorn==0.38.0",
+  "python-multipart==0.0.20",
+  "networkx==3.5",
+]
+
+[dependency-groups]
+dev = ["pytest==8.4.2", "httpx==0.28.1", "ruff==0.14.1"]
+
+[project.scripts]
+c2sim = "c2sim.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["backend/src/c2sim"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.hatch.build.targets.wheel.force-include]
+"backend/migrations" = "c2sim/migrations"

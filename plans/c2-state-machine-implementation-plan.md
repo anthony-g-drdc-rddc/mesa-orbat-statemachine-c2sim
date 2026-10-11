@@ -1,6 +1,8 @@
 # Mesa C2 State Machine Implementation Plan
 
-Version 2.0 | 11 October 2026 | Status: proposed implementation
+Version 2.0 | 11 October 2026 | Status: implemented in runtime 0.1.0
+
+See [README](../README.md) for execution instructions and [implementation notes](../docs/architecture.md) for verification scope.
 
 ## 1. Purpose
 

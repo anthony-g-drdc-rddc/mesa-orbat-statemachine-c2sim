@@ -1,0 +1,20 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "decision_id": {
+      "title": "Decision Id",
+      "type": "string"
+    },
+    "expected_commit_seq": {
+      "minimum": 0,
+      "title": "Expected Commit Seq",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "decision_id",
+    "expected_commit_seq"
+  ],
+  "title": "DecisionChooseInput",
+  "type": "object"
+}

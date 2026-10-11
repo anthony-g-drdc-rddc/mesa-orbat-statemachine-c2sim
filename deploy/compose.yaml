@@ -1,0 +1,19 @@
+services:
+  c2sim:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      C2SIM_SYSTEM_IDENTITY: headless-system
+    volumes:
+      - c2sim-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+volumes:
+  c2sim-data:

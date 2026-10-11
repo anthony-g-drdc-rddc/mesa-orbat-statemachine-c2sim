@@ -1,0 +1,33 @@
+{
+  "properties": {
+    "decision_id": {
+      "title": "Decision Id",
+      "type": "string"
+    },
+    "provider_id": {
+      "title": "Provider Id",
+      "type": "string"
+    },
+    "provider_version": {
+      "title": "Provider Version",
+      "type": "string"
+    },
+    "selected_option_id": {
+      "title": "Selected Option Id",
+      "type": "string"
+    },
+    "random_draw_index": {
+      "title": "Random Draw Index",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "decision_id",
+    "provider_id",
+    "provider_version",
+    "selected_option_id",
+    "random_draw_index"
+  ],
+  "title": "DecisionOutput",
+  "type": "object"
+}

@@ -1,0 +1,26 @@
+{
+  "decision_seed": 11577,
+  "mesa_seed": 42,
+  "mission_transitions": [
+    "REVIEWING_SITUATION",
+    "PLANNING_TASKS",
+    "DISPATCHING_DOMAIN_TASKS",
+    "EXECUTING",
+    "COMMANDER_REVIEW",
+    "PLANNING_TASKS",
+    "DISPATCHING_DOMAIN_TASKS",
+    "EXECUTING",
+    "COMMANDER_REVIEW",
+    "COMPLETED"
+  ],
+  "simulation_time_ms": 39000,
+  "supply_received": 50,
+  "approved_plan_version": 2,
+  "invariants": [
+    "all guards pass",
+    "unaffected task versions retained",
+    "supply conserved",
+    "unique transfers",
+    "receipt and accountability evidence before completion"
+  ]
+}

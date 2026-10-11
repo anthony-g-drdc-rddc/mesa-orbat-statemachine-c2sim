@@ -1,0 +1,51 @@
+{
+  "$defs": {
+    "RandomProviderConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "random",
+          "title": "Type",
+          "type": "string"
+        },
+        "seed": {
+          "title": "Seed",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "type",
+        "seed"
+      ],
+      "title": "RandomProviderConfig",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "scenario_start_utc": {
+      "title": "Scenario Start Utc",
+      "type": "string"
+    },
+    "mesa_seed": {
+      "title": "Mesa Seed",
+      "type": "integer"
+    },
+    "dt_ms": {
+      "default": 1000,
+      "exclusiveMinimum": 0,
+      "title": "Dt Ms",
+      "type": "integer"
+    },
+    "decision_provider": {
+      "$ref": "#/$defs/RandomProviderConfig"
+    }
+  },
+  "required": [
+    "scenario_start_utc",
+    "mesa_seed",
+    "decision_provider"
+  ],
+  "title": "RunCreateInput",
+  "type": "object"
+}

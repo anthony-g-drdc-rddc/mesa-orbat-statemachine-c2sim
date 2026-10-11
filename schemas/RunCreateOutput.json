@@ -1,0 +1,40 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "lifecycle": {
+      "const": "READY",
+      "title": "Lifecycle",
+      "type": "string"
+    },
+    "control_revision": {
+      "title": "Control Revision",
+      "type": "integer"
+    },
+    "scenario_hash": {
+      "title": "Scenario Hash",
+      "type": "string"
+    },
+    "provider_id": {
+      "title": "Provider Id",
+      "type": "string"
+    },
+    "provider_version": {
+      "title": "Provider Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "run_id",
+    "lifecycle",
+    "control_revision",
+    "scenario_hash",
+    "provider_id",
+    "provider_version"
+  ],
+  "title": "RunCreateOutput",
+  "type": "object"
+}

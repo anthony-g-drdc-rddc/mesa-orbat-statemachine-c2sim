@@ -1,0 +1,253 @@
+{
+  "mission_id": "coastal-resupply",
+  "objectives": [
+    "Deliver fifty supply units and account for all physical elements"
+  ],
+  "criteria": {
+    "op": "all_of",
+    "args": [
+      {
+        "op": "supply_received",
+        "ref": "POST-1",
+        "amount": 50
+      },
+      {
+        "op": "element_accounted_for",
+        "ref": "INT-1"
+      },
+      {
+        "op": "element_accounted_for",
+        "ref": "AIR-REC-1"
+      },
+      {
+        "op": "element_accounted_for",
+        "ref": "AIR-LIFT-1"
+      },
+      {
+        "op": "element_accounted_for",
+        "ref": "SEA-1"
+      },
+      {
+        "op": "element_accounted_for",
+        "ref": "ENG-1"
+      },
+      {
+        "op": "element_accounted_for",
+        "ref": "GROUND-1"
+      },
+      {
+        "op": "element_accounted_for",
+        "ref": "POST-1"
+      }
+    ]
+  },
+  "projected_crs": "EPSG:32630",
+  "area_wgs84": [
+    -1.2,
+    50.6,
+    -1.0,
+    50.8
+  ],
+  "unit_config": {
+    "HQ-1": {
+      "domain": "organization",
+      "speed_mps": 30,
+      "fuel_per_second": 0
+    },
+    "INT-1": {
+      "domain": "intelligence",
+      "speed_mps": 30,
+      "fuel_per_second": 0.1
+    },
+    "AIR-REC-1": {
+      "domain": "air",
+      "speed_mps": 100,
+      "fuel_per_second": 0.1
+    },
+    "AIR-LIFT-1": {
+      "domain": "air",
+      "speed_mps": 100,
+      "fuel_per_second": 0.1
+    },
+    "SEA-1": {
+      "domain": "navy",
+      "speed_mps": 30,
+      "fuel_per_second": 0.1
+    },
+    "ENG-1": {
+      "domain": "army",
+      "speed_mps": 30,
+      "fuel_per_second": 0.1
+    },
+    "GROUND-1": {
+      "domain": "army",
+      "speed_mps": 30,
+      "fuel_per_second": 0.1
+    },
+    "POST-1": {
+      "domain": "army",
+      "speed_mps": 30,
+      "fuel_per_second": 0.1
+    }
+  },
+  "preliminary_tasks": [
+    {
+      "id": "int-collect",
+      "version": 1,
+      "domain": "intelligence",
+      "unit_id": "INT-1",
+      "activity": "collect",
+      "duration_ms": 2000,
+      "preliminary": true,
+      "finding": "coastal-access"
+    },
+    {
+      "id": "air-collect",
+      "version": 1,
+      "domain": "air",
+      "unit_id": "AIR-REC-1",
+      "activity": "collect",
+      "duration_ms": 2000,
+      "preliminary": true,
+      "finding": "landing-zone"
+    }
+  ],
+  "plans": [
+    {
+      "version": 1,
+      "tasks": [
+        {
+          "id": "sea-delivery",
+          "version": 1,
+          "domain": "navy",
+          "unit_id": "SEA-1",
+          "activity": "unload",
+          "duration_ms": 1000,
+          "route_id": "sea-route",
+          "supply_amount": 40,
+          "transfer_to": "GROUND-1"
+        },
+        {
+          "id": "air-delivery",
+          "version": 1,
+          "domain": "air",
+          "unit_id": "AIR-LIFT-1",
+          "activity": "deliver",
+          "duration_ms": 1000,
+          "route_id": "air-route",
+          "supply_amount": 10,
+          "transfer_to": "POST-1"
+        },
+        {
+          "id": "engineering",
+          "version": 1,
+          "domain": "army",
+          "unit_id": "ENG-1",
+          "activity": "inspect",
+          "duration_ms": 2000,
+          "route_id": "crossing"
+        },
+        {
+          "id": "ground-delivery",
+          "version": 1,
+          "domain": "army",
+          "unit_id": "GROUND-1",
+          "activity": "deliver",
+          "duration_ms": 1000,
+          "route_id": "crossing",
+          "supply_amount": 40,
+          "transfer_to": "POST-1",
+          "dependencies": [
+            "sea-delivery"
+          ]
+        },
+        {
+          "id": "post-accountability",
+          "version": 1,
+          "domain": "army",
+          "unit_id": "POST-1",
+          "activity": "wait",
+          "duration_ms": 1000,
+          "dependencies": [
+            "air-delivery",
+            "ground-delivery"
+          ]
+        }
+      ]
+    },
+    {
+      "version": 2,
+      "tasks": [
+        {
+          "id": "sea-delivery",
+          "version": 1,
+          "domain": "navy",
+          "unit_id": "SEA-1",
+          "activity": "unload",
+          "duration_ms": 1000,
+          "route_id": "sea-route",
+          "supply_amount": 40,
+          "transfer_to": "GROUND-1"
+        },
+        {
+          "id": "air-delivery",
+          "version": 1,
+          "domain": "air",
+          "unit_id": "AIR-LIFT-1",
+          "activity": "deliver",
+          "duration_ms": 1000,
+          "route_id": "air-route",
+          "supply_amount": 10,
+          "transfer_to": "POST-1"
+        },
+        {
+          "id": "engineering",
+          "version": 1,
+          "domain": "army",
+          "unit_id": "ENG-1",
+          "activity": "inspect",
+          "duration_ms": 2000,
+          "route_id": "crossing"
+        },
+        {
+          "id": "ground-delivery",
+          "version": 2,
+          "domain": "army",
+          "unit_id": "GROUND-1",
+          "activity": "deliver",
+          "duration_ms": 1000,
+          "route_id": "detour",
+          "supply_amount": 40,
+          "transfer_to": "POST-1",
+          "dependencies": [
+            "sea-delivery"
+          ]
+        },
+        {
+          "id": "post-accountability",
+          "version": 1,
+          "domain": "army",
+          "unit_id": "POST-1",
+          "activity": "wait",
+          "duration_ms": 1000,
+          "dependencies": [
+            "air-delivery",
+            "ground-delivery"
+          ]
+        }
+      ],
+      "trigger_report": "crossing:unavailable"
+    }
+  ],
+  "actual_blocked_routes": [
+    "crossing"
+  ],
+  "accepted_information_gaps": [
+    "Crossing requires engineering inspection"
+  ],
+  "timings": {
+    "communication_delay_ms": 2000,
+    "position_period_ms": 5000,
+    "stale_after_ms": 15000
+  }
+}

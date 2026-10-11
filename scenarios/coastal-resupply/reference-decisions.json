@@ -1,0 +1,1940 @@
+{
+  "run_id": "coastal-resupply-reference",
+  "decisions": {
+    "coastal-resupply-reference:decision:0:6455d6f25c10": {
+      "input": {
+        "decision_id": "coastal-resupply-reference:decision:0:6455d6f25c10",
+        "run_id": "coastal-resupply-reference",
+        "commit_seq": 0,
+        "simulation_time_ms": 0,
+        "machines": [
+          {
+            "machine_type": "mission",
+            "machine_id": "coastal-resupply",
+            "current_state": "ORGANIZING",
+            "revision": 0
+          }
+        ],
+        "options": [
+          {
+            "option_id": "7db4fd944561aed8b68720b0",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 0,
+                "from_state": "ORGANIZING",
+                "target_state": "CANCELLED"
+              }
+            ],
+            "evidence_ids": []
+          },
+          {
+            "option_id": "8989c3d8b8febb84236633d5",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 0,
+                "from_state": "ORGANIZING",
+                "target_state": "REVIEWING_SITUATION"
+              }
+            ],
+            "evidence_ids": [
+              "scenario:mission"
+            ]
+          }
+        ]
+      },
+      "output": {
+        "decision_id": "coastal-resupply-reference:decision:0:6455d6f25c10",
+        "provider_id": "random",
+        "provider_version": "1.0.0",
+        "selected_option_id": "8989c3d8b8febb84236633d5",
+        "random_draw_index": 1
+      },
+      "guard_results": [
+        {
+          "allowed": true,
+          "reasons": [],
+          "evidence_ids": [
+            "scenario:mission"
+          ]
+        }
+      ],
+      "result": {
+        "decision": {
+          "decision_id": "coastal-resupply-reference:decision:0:6455d6f25c10",
+          "provider_id": "random",
+          "provider_version": "1.0.0",
+          "selected_option_id": "8989c3d8b8febb84236633d5",
+          "random_draw_index": 1
+        },
+        "applied_intents": [
+          {
+            "machine_type": "mission",
+            "machine_id": "coastal-resupply",
+            "expected_revision": 0,
+            "from_state": "ORGANIZING",
+            "target_state": "REVIEWING_SITUATION"
+          }
+        ],
+        "outcome": "APPLIED",
+        "resulting_commit_seq": 1
+      }
+    },
+    "coastal-resupply-reference:decision:9:4e6594bc9b3a": {
+      "input": {
+        "decision_id": "coastal-resupply-reference:decision:9:4e6594bc9b3a",
+        "run_id": "coastal-resupply-reference",
+        "commit_seq": 9,
+        "simulation_time_ms": 9000,
+        "machines": [
+          {
+            "machine_type": "mission",
+            "machine_id": "coastal-resupply",
+            "current_state": "REVIEWING_SITUATION",
+            "revision": 1
+          }
+        ],
+        "options": [
+          {
+            "option_id": "81dfcd0be048e5118ac83ce5",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 1,
+                "from_state": "REVIEWING_SITUATION",
+                "target_state": "PLANNING_TASKS"
+              }
+            ],
+            "evidence_ids": [
+              "event-00000004",
+              "report-00000035",
+              "report-00000054",
+              "report-00000096",
+              "report-00000123",
+              "event-00000008",
+              "report-00000040",
+              "report-00000060",
+              "report-00000089",
+              "report-00000113"
+            ]
+          },
+          {
+            "option_id": "f197c59a6c85d0e54487e9f9",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 1,
+                "from_state": "REVIEWING_SITUATION",
+                "target_state": "CANCELLED"
+              }
+            ],
+            "evidence_ids": []
+          }
+        ]
+      },
+      "output": {
+        "decision_id": "coastal-resupply-reference:decision:9:4e6594bc9b3a",
+        "provider_id": "random",
+        "provider_version": "1.0.0",
+        "selected_option_id": "81dfcd0be048e5118ac83ce5",
+        "random_draw_index": 0
+      },
+      "guard_results": [
+        {
+          "allowed": true,
+          "reasons": [],
+          "evidence_ids": [
+            "event-00000004",
+            "report-00000035",
+            "report-00000054",
+            "report-00000096",
+            "report-00000123",
+            "event-00000008",
+            "report-00000040",
+            "report-00000060",
+            "report-00000089",
+            "report-00000113"
+          ]
+        }
+      ],
+      "result": {
+        "decision": {
+          "decision_id": "coastal-resupply-reference:decision:9:4e6594bc9b3a",
+          "provider_id": "random",
+          "provider_version": "1.0.0",
+          "selected_option_id": "81dfcd0be048e5118ac83ce5",
+          "random_draw_index": 0
+        },
+        "applied_intents": [
+          {
+            "machine_type": "mission",
+            "machine_id": "coastal-resupply",
+            "expected_revision": 1,
+            "from_state": "REVIEWING_SITUATION",
+            "target_state": "PLANNING_TASKS"
+          }
+        ],
+        "outcome": "APPLIED",
+        "resulting_commit_seq": 10
+      }
+    },
+    "coastal-resupply-reference:decision:10:77cb7a53053b": {
+      "input": {
+        "decision_id": "coastal-resupply-reference:decision:10:77cb7a53053b",
+        "run_id": "coastal-resupply-reference",
+        "commit_seq": 10,
+        "simulation_time_ms": 10000,
+        "machines": [
+          {
+            "machine_type": "mission",
+            "machine_id": "coastal-resupply",
+            "current_state": "PLANNING_TASKS",
+            "revision": 2
+          }
+        ],
+        "options": [
+          {
+            "option_id": "8cf591389e53653925f17d1f",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 2,
+                "from_state": "PLANNING_TASKS",
+                "target_state": "DISPATCHING_DOMAIN_TASKS"
+              }
+            ],
+            "evidence_ids": []
+          },
+          {
+            "option_id": "dee4dfa061bc136bed1e231c",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 2,
+                "from_state": "PLANNING_TASKS",
+                "target_state": "CANCELLED"
+              }
+            ],
+            "evidence_ids": []
+          }
+        ]
+      },
+      "output": {
+        "decision_id": "coastal-resupply-reference:decision:10:77cb7a53053b",
+        "provider_id": "random",
+        "provider_version": "1.0.0",
+        "selected_option_id": "8cf591389e53653925f17d1f",
+        "random_draw_index": 0
+      },
+      "guard_results": [
+        {
+          "allowed": true,
+          "reasons": [],
+          "evidence_ids": []
+        }
+      ],
+      "result": {
+        "decision": {
+          "decision_id": "coastal-resupply-reference:decision:10:77cb7a53053b",
+          "provider_id": "random",
+          "provider_version": "1.0.0",
+          "selected_option_id": "8cf591389e53653925f17d1f",
+          "random_draw_index": 0
+        },
+        "applied_intents": [
+          {
+            "machine_type": "mission",
+            "machine_id": "coastal-resupply",
+            "expected_revision": 2,
+            "from_state": "PLANNING_TASKS",
+            "target_state": "DISPATCHING_DOMAIN_TASKS"
+          }
+        ],
+        "outcome": "APPLIED",
+        "resulting_commit_seq": 11
+      }
+    },
+    "coastal-resupply-reference:decision:16:57d4f6f36f7c": {
+      "input": {
+        "decision_id": "coastal-resupply-reference:decision:16:57d4f6f36f7c",
+        "run_id": "coastal-resupply-reference",
+        "commit_seq": 16,
+        "simulation_time_ms": 16000,
+        "machines": [
+          {
+            "machine_type": "disposition",
+            "machine_id": "air-delivery@1",
+            "current_state": "continue",
+            "revision": 3
+          },
+          {
+            "machine_type": "disposition",
+            "machine_id": "engineering@1",
+            "current_state": "continue",
+            "revision": 3
+          },
+          {
+            "machine_type": "disposition",
+            "machine_id": "ground-delivery@1",
+            "current_state": "continue",
+            "revision": 3
+          },
+          {
+            "machine_type": "disposition",
+            "machine_id": "post-accountability@1",
+            "current_state": "continue",
+            "revision": 3
+          },
+          {
+            "machine_type": "disposition",
+            "machine_id": "sea-delivery@1",
+            "current_state": "continue",
+            "revision": 3
+          },
+          {
+            "machine_type": "mission",
+            "machine_id": "coastal-resupply",
+            "current_state": "DISPATCHING_DOMAIN_TASKS",
+            "revision": 3
+          }
+        ],
+        "options": [
+          {
+            "option_id": "67878db2e58952738d070754",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 3,
+                "from_state": "DISPATCHING_DOMAIN_TASKS",
+                "target_state": "CANCELLED"
+              },
+              {
+                "machine_type": "disposition",
+                "machine_id": "air-delivery@1",
+                "expected_revision": 3,
+                "from_state": "continue",
+                "target_state": "cancel"
+              },
+              {
+                "machine_type": "disposition",
+                "machine_id": "engineering@1",
+                "expected_revision": 3,
+                "from_state": "continue",
+                "target_state": "cancel"
+              },
+              {
+                "machine_type": "disposition",
+                "machine_id": "ground-delivery@1",
+                "expected_revision": 3,
+                "from_state": "continue",
+                "target_state": "cancel"
+              },
+              {
+                "machine_type": "disposition",
+                "machine_id": "post-accountability@1",
+                "expected_revision": 3,
+                "from_state": "continue",
+                "target_state": "cancel"
+              },
+              {
+                "machine_type": "disposition",
+                "machine_id": "sea-delivery@1",
+                "expected_revision": 3,
+                "from_state": "continue",
+                "target_state": "cancel"
+              }
+            ],
+            "evidence_ids": []
+          },
+          {
+            "option_id": "f73be23296d10caf88ceb70f",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 3,
+                "from_state": "DISPATCHING_DOMAIN_TASKS",
+                "target_state": "EXECUTING"
+              }
+            ],
+            "evidence_ids": [
+              "event-00000148",
+              "report-00000191",
+              "report-00000225",
+              "event-00000152",
+              "report-00000196",
+              "report-00000231",
+              "event-00000156",
+              "report-00000201",
+              "report-00000237",
+              "event-00000160",
+              "report-00000206",
+              "report-00000243",
+              "event-00000164",
+              "report-00000211",
+              "report-00000249"
+            ]
+          }
+        ]
+      },
+      "output": {
+        "decision_id": "coastal-resupply-reference:decision:16:57d4f6f36f7c",
+        "provider_id": "random",
+        "provider_version": "1.0.0",
+        "selected_option_id": "f73be23296d10caf88ceb70f",
+        "random_draw_index": 1
+      },
+      "guard_results": [
+        {
+          "allowed": true,
+          "reasons": [],
+          "evidence_ids": [
+            "event-00000148",
+            "report-00000191",
+            "report-00000225",
+            "event-00000152",
+            "report-00000196",
+            "report-00000231",
+            "event-00000156",
+            "report-00000201",
+            "report-00000237",
+            "event-00000160",
+            "report-00000206",
+            "report-00000243",
+            "event-00000164",
+            "report-00000211",
+            "report-00000249"
+          ]
+        }
+      ],
+      "result": {
+        "decision": {
+          "decision_id": "coastal-resupply-reference:decision:16:57d4f6f36f7c",
+          "provider_id": "random",
+          "provider_version": "1.0.0",
+          "selected_option_id": "f73be23296d10caf88ceb70f",
+          "random_draw_index": 1
+        },
+        "applied_intents": [
+          {
+            "machine_type": "mission",
+            "machine_id": "coastal-resupply",
+            "expected_revision": 3,
+            "from_state": "DISPATCHING_DOMAIN_TASKS",
+            "target_state": "EXECUTING"
+          }
+        ],
+        "outcome": "APPLIED",
+        "resulting_commit_seq": 17
+      }
+    },
+    "coastal-resupply-reference:decision:19:e0859c9526f4": {
+      "input": {
+        "decision_id": "coastal-resupply-reference:decision:19:e0859c9526f4",
+        "run_id": "coastal-resupply-reference",
+        "commit_seq": 19,
+        "simulation_time_ms": 19000,
+        "machines": [
+          {
+            "machine_type": "disposition",
+            "machine_id": "ground-delivery@1",
+            "current_state": "continue",
+            "revision": 3
+          },
+          {
+            "machine_type": "disposition",
+            "machine_id": "post-accountability@1",
+            "current_state": "continue",
+            "revision": 3
+          },
+          {
+            "machine_type": "disposition",
+            "machine_id": "sea-delivery@1",
+            "current_state": "continue",
+            "revision": 4
+          },
+          {
+            "machine_type": "mission",
+            "machine_id": "coastal-resupply",
+            "current_state": "EXECUTING",
+            "revision": 4
+          }
+        ],
+        "options": [
+          {
+            "option_id": "4990a37198fce9b234a91593",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 4,
+                "from_state": "EXECUTING",
+                "target_state": "PAUSED"
+              },
+              {
+                "machine_type": "disposition",
+                "machine_id": "ground-delivery@1",
+                "expected_revision": 3,
+                "from_state": "continue",
+                "target_state": "pause"
+              },
+              {
+                "machine_type": "disposition",
+                "machine_id": "post-accountability@1",
+                "expected_revision": 3,
+                "from_state": "continue",
+                "target_state": "pause"
+              },
+              {
+                "machine_type": "disposition",
+                "machine_id": "sea-delivery@1",
+                "expected_revision": 4,
+                "from_state": "continue",
+                "target_state": "pause"
+              }
+            ],
+            "evidence_ids": []
+          },
+          {
+            "option_id": "4fce4be5acddd288f6320522",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 4,
+                "from_state": "EXECUTING",
+                "target_state": "CANCELLED"
+              },
+              {
+                "machine_type": "disposition",
+                "machine_id": "ground-delivery@1",
+                "expected_revision": 3,
+                "from_state": "continue",
+                "target_state": "cancel"
+              },
+              {
+                "machine_type": "disposition",
+                "machine_id": "post-accountability@1",
+                "expected_revision": 3,
+                "from_state": "continue",
+                "target_state": "cancel"
+              },
+              {
+                "machine_type": "disposition",
+                "machine_id": "sea-delivery@1",
+                "expected_revision": 4,
+                "from_state": "continue",
+                "target_state": "cancel"
+              }
+            ],
+            "evidence_ids": []
+          },
+          {
+            "option_id": "72c466f74329bbcac37697a2",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 4,
+                "from_state": "EXECUTING",
+                "target_state": "COMMANDER_REVIEW"
+              }
+            ],
+            "evidence_ids": [
+              "report-00000116",
+              "report-00000126",
+              "report-00000314",
+              "report-00000322",
+              "report-00000325",
+              "report-00000332"
+            ]
+          }
+        ]
+      },
+      "output": {
+        "decision_id": "coastal-resupply-reference:decision:19:e0859c9526f4",
+        "provider_id": "random",
+        "provider_version": "1.0.0",
+        "selected_option_id": "72c466f74329bbcac37697a2",
+        "random_draw_index": 2
+      },
+      "guard_results": [
+        {
+          "allowed": true,
+          "reasons": [],
+          "evidence_ids": [
+            "report-00000116",
+            "report-00000126",
+            "report-00000314",
+            "report-00000322",
+            "report-00000325",
+            "report-00000332"
+          ]
+        }
+      ],
+      "result": {
+        "decision": {
+          "decision_id": "coastal-resupply-reference:decision:19:e0859c9526f4",
+          "provider_id": "random",
+          "provider_version": "1.0.0",
+          "selected_option_id": "72c466f74329bbcac37697a2",
+          "random_draw_index": 2
+        },
+        "applied_intents": [
+          {
+            "machine_type": "mission",
+            "machine_id": "coastal-resupply",
+            "expected_revision": 4,
+            "from_state": "EXECUTING",
+            "target_state": "COMMANDER_REVIEW"
+          }
+        ],
+        "outcome": "APPLIED",
+        "resulting_commit_seq": 20
+      }
+    },
+    "coastal-resupply-reference:decision:20:dce35e5fa4e2": {
+      "input": {
+        "decision_id": "coastal-resupply-reference:decision:20:dce35e5fa4e2",
+        "run_id": "coastal-resupply-reference",
+        "commit_seq": 20,
+        "simulation_time_ms": 20000,
+        "machines": [
+          {
+            "machine_type": "disposition",
+            "machine_id": "ground-delivery@1",
+            "current_state": "continue",
+            "revision": 3
+          },
+          {
+            "machine_type": "disposition",
+            "machine_id": "post-accountability@1",
+            "current_state": "continue",
+            "revision": 3
+          },
+          {
+            "machine_type": "mission",
+            "machine_id": "coastal-resupply",
+            "current_state": "COMMANDER_REVIEW",
+            "revision": 5
+          }
+        ],
+        "options": [
+          {
+            "option_id": "07ee2bbd508502ef99696400",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 5,
+                "from_state": "COMMANDER_REVIEW",
+                "target_state": "PLANNING_TASKS"
+              }
+            ],
+            "evidence_ids": []
+          },
+          {
+            "option_id": "1786d771fb9c9f601e3cb198",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 5,
+                "from_state": "COMMANDER_REVIEW",
+                "target_state": "CANCELLED"
+              },
+              {
+                "machine_type": "disposition",
+                "machine_id": "ground-delivery@1",
+                "expected_revision": 3,
+                "from_state": "continue",
+                "target_state": "cancel"
+              },
+              {
+                "machine_type": "disposition",
+                "machine_id": "post-accountability@1",
+                "expected_revision": 3,
+                "from_state": "continue",
+                "target_state": "cancel"
+              }
+            ],
+            "evidence_ids": []
+          },
+          {
+            "option_id": "4c2b3d21c1f0d8b136363dc3",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 5,
+                "from_state": "COMMANDER_REVIEW",
+                "target_state": "REVIEWING_SITUATION"
+              }
+            ],
+            "evidence_ids": []
+          },
+          {
+            "option_id": "a761b74f13f9b3554545c652",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 5,
+                "from_state": "COMMANDER_REVIEW",
+                "target_state": "PAUSED"
+              },
+              {
+                "machine_type": "disposition",
+                "machine_id": "ground-delivery@1",
+                "expected_revision": 3,
+                "from_state": "continue",
+                "target_state": "pause"
+              },
+              {
+                "machine_type": "disposition",
+                "machine_id": "post-accountability@1",
+                "expected_revision": 3,
+                "from_state": "continue",
+                "target_state": "pause"
+              }
+            ],
+            "evidence_ids": []
+          },
+          {
+            "option_id": "f911b9f6730dbaa688939a72",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 5,
+                "from_state": "COMMANDER_REVIEW",
+                "target_state": "EXECUTING"
+              }
+            ],
+            "evidence_ids": []
+          }
+        ]
+      },
+      "output": {
+        "decision_id": "coastal-resupply-reference:decision:20:dce35e5fa4e2",
+        "provider_id": "random",
+        "provider_version": "1.0.0",
+        "selected_option_id": "07ee2bbd508502ef99696400",
+        "random_draw_index": 0
+      },
+      "guard_results": [
+        {
+          "allowed": true,
+          "reasons": [],
+          "evidence_ids": []
+        }
+      ],
+      "result": {
+        "decision": {
+          "decision_id": "coastal-resupply-reference:decision:20:dce35e5fa4e2",
+          "provider_id": "random",
+          "provider_version": "1.0.0",
+          "selected_option_id": "07ee2bbd508502ef99696400",
+          "random_draw_index": 0
+        },
+        "applied_intents": [
+          {
+            "machine_type": "mission",
+            "machine_id": "coastal-resupply",
+            "expected_revision": 5,
+            "from_state": "COMMANDER_REVIEW",
+            "target_state": "PLANNING_TASKS"
+          }
+        ],
+        "outcome": "APPLIED",
+        "resulting_commit_seq": 21
+      }
+    },
+    "coastal-resupply-reference:decision:21:62440babaf68": {
+      "input": {
+        "decision_id": "coastal-resupply-reference:decision:21:62440babaf68",
+        "run_id": "coastal-resupply-reference",
+        "commit_seq": 21,
+        "simulation_time_ms": 21000,
+        "machines": [
+          {
+            "machine_type": "disposition",
+            "machine_id": "ground-delivery@1",
+            "current_state": "continue",
+            "revision": 3
+          },
+          {
+            "machine_type": "disposition",
+            "machine_id": "post-accountability@1",
+            "current_state": "continue",
+            "revision": 3
+          },
+          {
+            "machine_type": "mission",
+            "machine_id": "coastal-resupply",
+            "current_state": "PLANNING_TASKS",
+            "revision": 6
+          }
+        ],
+        "options": [
+          {
+            "option_id": "255a012ec37e4f611acf7426",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 6,
+                "from_state": "PLANNING_TASKS",
+                "target_state": "DISPATCHING_DOMAIN_TASKS"
+              },
+              {
+                "machine_type": "disposition",
+                "machine_id": "ground-delivery@1",
+                "expected_revision": 3,
+                "from_state": "continue",
+                "target_state": "cancel"
+              }
+            ],
+            "evidence_ids": [
+              "report-00000325"
+            ]
+          },
+          {
+            "option_id": "ee74ffee96cb715fbbe15f94",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 6,
+                "from_state": "PLANNING_TASKS",
+                "target_state": "CANCELLED"
+              },
+              {
+                "machine_type": "disposition",
+                "machine_id": "ground-delivery@1",
+                "expected_revision": 3,
+                "from_state": "continue",
+                "target_state": "cancel"
+              },
+              {
+                "machine_type": "disposition",
+                "machine_id": "post-accountability@1",
+                "expected_revision": 3,
+                "from_state": "continue",
+                "target_state": "cancel"
+              }
+            ],
+            "evidence_ids": []
+          }
+        ]
+      },
+      "output": {
+        "decision_id": "coastal-resupply-reference:decision:21:62440babaf68",
+        "provider_id": "random",
+        "provider_version": "1.0.0",
+        "selected_option_id": "255a012ec37e4f611acf7426",
+        "random_draw_index": 0
+      },
+      "guard_results": [
+        {
+          "allowed": true,
+          "reasons": [],
+          "evidence_ids": [
+            "report-00000325"
+          ]
+        },
+        {
+          "allowed": true,
+          "reasons": [],
+          "evidence_ids": []
+        }
+      ],
+      "result": {
+        "decision": {
+          "decision_id": "coastal-resupply-reference:decision:21:62440babaf68",
+          "provider_id": "random",
+          "provider_version": "1.0.0",
+          "selected_option_id": "255a012ec37e4f611acf7426",
+          "random_draw_index": 0
+        },
+        "applied_intents": [
+          {
+            "machine_type": "mission",
+            "machine_id": "coastal-resupply",
+            "expected_revision": 6,
+            "from_state": "PLANNING_TASKS",
+            "target_state": "DISPATCHING_DOMAIN_TASKS"
+          },
+          {
+            "machine_type": "disposition",
+            "machine_id": "ground-delivery@1",
+            "expected_revision": 3,
+            "from_state": "continue",
+            "target_state": "cancel"
+          }
+        ],
+        "outcome": "APPLIED",
+        "resulting_commit_seq": 22
+      }
+    },
+    "coastal-resupply-reference:decision:27:1b2a6a39a0ff": {
+      "input": {
+        "decision_id": "coastal-resupply-reference:decision:27:1b2a6a39a0ff",
+        "run_id": "coastal-resupply-reference",
+        "commit_seq": 27,
+        "simulation_time_ms": 27000,
+        "machines": [
+          {
+            "machine_type": "disposition",
+            "machine_id": "ground-delivery@2",
+            "current_state": "continue",
+            "revision": 3
+          },
+          {
+            "machine_type": "disposition",
+            "machine_id": "post-accountability@1",
+            "current_state": "continue",
+            "revision": 3
+          },
+          {
+            "machine_type": "mission",
+            "machine_id": "coastal-resupply",
+            "current_state": "DISPATCHING_DOMAIN_TASKS",
+            "revision": 7
+          }
+        ],
+        "options": [
+          {
+            "option_id": "894b98adaf97b1cdea42141f",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 7,
+                "from_state": "DISPATCHING_DOMAIN_TASKS",
+                "target_state": "EXECUTING"
+              }
+            ],
+            "evidence_ids": [
+              "event-00000148",
+              "report-00000191",
+              "report-00000225",
+              "report-00000300",
+              "report-00000352",
+              "event-00000152",
+              "report-00000196",
+              "report-00000231",
+              "report-00000286",
+              "report-00000319",
+              "event-00000156",
+              "report-00000201",
+              "report-00000237",
+              "report-00000293",
+              "report-00000329",
+              "event-00000412",
+              "report-00000440",
+              "report-00000451",
+              "event-00000164",
+              "report-00000211",
+              "report-00000249"
+            ]
+          },
+          {
+            "option_id": "e7721f8d6350e155973d7669",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 7,
+                "from_state": "DISPATCHING_DOMAIN_TASKS",
+                "target_state": "CANCELLED"
+              },
+              {
+                "machine_type": "disposition",
+                "machine_id": "ground-delivery@2",
+                "expected_revision": 3,
+                "from_state": "continue",
+                "target_state": "cancel"
+              },
+              {
+                "machine_type": "disposition",
+                "machine_id": "post-accountability@1",
+                "expected_revision": 3,
+                "from_state": "continue",
+                "target_state": "cancel"
+              }
+            ],
+            "evidence_ids": []
+          }
+        ]
+      },
+      "output": {
+        "decision_id": "coastal-resupply-reference:decision:27:1b2a6a39a0ff",
+        "provider_id": "random",
+        "provider_version": "1.0.0",
+        "selected_option_id": "894b98adaf97b1cdea42141f",
+        "random_draw_index": 0
+      },
+      "guard_results": [
+        {
+          "allowed": true,
+          "reasons": [],
+          "evidence_ids": [
+            "event-00000148",
+            "report-00000191",
+            "report-00000225",
+            "report-00000300",
+            "report-00000352",
+            "event-00000152",
+            "report-00000196",
+            "report-00000231",
+            "report-00000286",
+            "report-00000319",
+            "event-00000156",
+            "report-00000201",
+            "report-00000237",
+            "report-00000293",
+            "report-00000329",
+            "event-00000412",
+            "report-00000440",
+            "report-00000451",
+            "event-00000164",
+            "report-00000211",
+            "report-00000249"
+          ]
+        }
+      ],
+      "result": {
+        "decision": {
+          "decision_id": "coastal-resupply-reference:decision:27:1b2a6a39a0ff",
+          "provider_id": "random",
+          "provider_version": "1.0.0",
+          "selected_option_id": "894b98adaf97b1cdea42141f",
+          "random_draw_index": 0
+        },
+        "applied_intents": [
+          {
+            "machine_type": "mission",
+            "machine_id": "coastal-resupply",
+            "expected_revision": 7,
+            "from_state": "DISPATCHING_DOMAIN_TASKS",
+            "target_state": "EXECUTING"
+          }
+        ],
+        "outcome": "APPLIED",
+        "resulting_commit_seq": 28
+      }
+    },
+    "coastal-resupply-reference:decision:37:b42016738a53": {
+      "input": {
+        "decision_id": "coastal-resupply-reference:decision:37:b42016738a53",
+        "run_id": "coastal-resupply-reference",
+        "commit_seq": 37,
+        "simulation_time_ms": 37000,
+        "machines": [
+          {
+            "machine_type": "mission",
+            "machine_id": "coastal-resupply",
+            "current_state": "EXECUTING",
+            "revision": 8
+          }
+        ],
+        "options": [
+          {
+            "option_id": "cd2a9b26cb431fd2c51f87b9",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 8,
+                "from_state": "EXECUTING",
+                "target_state": "CANCELLED"
+              }
+            ],
+            "evidence_ids": []
+          },
+          {
+            "option_id": "d0185027a2c968601e913181",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 8,
+                "from_state": "EXECUTING",
+                "target_state": "PAUSED"
+              }
+            ],
+            "evidence_ids": []
+          },
+          {
+            "option_id": "e4ad0703706ecdd8ff28acd2",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 8,
+                "from_state": "EXECUTING",
+                "target_state": "COMMANDER_REVIEW"
+              }
+            ],
+            "evidence_ids": [
+              "report-00000116",
+              "report-00000126",
+              "report-00000314",
+              "report-00000322",
+              "report-00000325",
+              "report-00000332",
+              "report-00000347",
+              "report-00000355",
+              "report-00000383",
+              "report-00000433",
+              "report-00000544",
+              "report-00000552",
+              "report-00000568"
+            ]
+          }
+        ]
+      },
+      "output": {
+        "decision_id": "coastal-resupply-reference:decision:37:b42016738a53",
+        "provider_id": "random",
+        "provider_version": "1.0.0",
+        "selected_option_id": "e4ad0703706ecdd8ff28acd2",
+        "random_draw_index": 2
+      },
+      "guard_results": [
+        {
+          "allowed": true,
+          "reasons": [],
+          "evidence_ids": [
+            "report-00000116",
+            "report-00000126",
+            "report-00000314",
+            "report-00000322",
+            "report-00000325",
+            "report-00000332",
+            "report-00000347",
+            "report-00000355",
+            "report-00000383",
+            "report-00000433",
+            "report-00000544",
+            "report-00000552",
+            "report-00000568"
+          ]
+        }
+      ],
+      "result": {
+        "decision": {
+          "decision_id": "coastal-resupply-reference:decision:37:b42016738a53",
+          "provider_id": "random",
+          "provider_version": "1.0.0",
+          "selected_option_id": "e4ad0703706ecdd8ff28acd2",
+          "random_draw_index": 2
+        },
+        "applied_intents": [
+          {
+            "machine_type": "mission",
+            "machine_id": "coastal-resupply",
+            "expected_revision": 8,
+            "from_state": "EXECUTING",
+            "target_state": "COMMANDER_REVIEW"
+          }
+        ],
+        "outcome": "APPLIED",
+        "resulting_commit_seq": 38
+      }
+    },
+    "coastal-resupply-reference:decision:38:c50d31588117": {
+      "input": {
+        "decision_id": "coastal-resupply-reference:decision:38:c50d31588117",
+        "run_id": "coastal-resupply-reference",
+        "commit_seq": 38,
+        "simulation_time_ms": 38000,
+        "machines": [
+          {
+            "machine_type": "mission",
+            "machine_id": "coastal-resupply",
+            "current_state": "COMMANDER_REVIEW",
+            "revision": 9
+          }
+        ],
+        "options": [
+          {
+            "option_id": "4c338a0c63dec90b715f85fc",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 9,
+                "from_state": "COMMANDER_REVIEW",
+                "target_state": "CANCELLED"
+              }
+            ],
+            "evidence_ids": []
+          },
+          {
+            "option_id": "6c7d756f6b77c01f257ca6bd",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 9,
+                "from_state": "COMMANDER_REVIEW",
+                "target_state": "PAUSED"
+              }
+            ],
+            "evidence_ids": []
+          },
+          {
+            "option_id": "8acc2fb79ddb8784fd31dfc4",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 9,
+                "from_state": "COMMANDER_REVIEW",
+                "target_state": "PLANNING_TASKS"
+              }
+            ],
+            "evidence_ids": []
+          },
+          {
+            "option_id": "ab2ddb8421e17223f2d96825",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 9,
+                "from_state": "COMMANDER_REVIEW",
+                "target_state": "EXECUTING"
+              }
+            ],
+            "evidence_ids": []
+          },
+          {
+            "option_id": "b49e28844fcb93b554116a57",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 9,
+                "from_state": "COMMANDER_REVIEW",
+                "target_state": "COMPLETED"
+              }
+            ],
+            "evidence_ids": [
+              "report-00000116",
+              "report-00000126",
+              "report-00000314",
+              "report-00000322",
+              "report-00000332",
+              "report-00000355",
+              "report-00000433",
+              "report-00000544",
+              "report-00000552",
+              "report-00000568"
+            ]
+          },
+          {
+            "option_id": "ef10ef9aa673fced229c75e7",
+            "intents": [
+              {
+                "machine_type": "mission",
+                "machine_id": "coastal-resupply",
+                "expected_revision": 9,
+                "from_state": "COMMANDER_REVIEW",
+                "target_state": "REVIEWING_SITUATION"
+              }
+            ],
+            "evidence_ids": []
+          }
+        ]
+      },
+      "output": {
+        "decision_id": "coastal-resupply-reference:decision:38:c50d31588117",
+        "provider_id": "random",
+        "provider_version": "1.0.0",
+        "selected_option_id": "b49e28844fcb93b554116a57",
+        "random_draw_index": 4
+      },
+      "guard_results": [
+        {
+          "allowed": true,
+          "reasons": [],
+          "evidence_ids": [
+            "report-00000116",
+            "report-00000126",
+            "report-00000314",
+            "report-00000322",
+            "report-00000332",
+            "report-00000355",
+            "report-00000433",
+            "report-00000544",
+            "report-00000552",
+            "report-00000568"
+          ]
+        }
+      ],
+      "result": {
+        "decision": {
+          "decision_id": "coastal-resupply-reference:decision:38:c50d31588117",
+          "provider_id": "random",
+          "provider_version": "1.0.0",
+          "selected_option_id": "b49e28844fcb93b554116a57",
+          "random_draw_index": 4
+        },
+        "applied_intents": [
+          {
+            "machine_type": "mission",
+            "machine_id": "coastal-resupply",
+            "expected_revision": 9,
+            "from_state": "COMMANDER_REVIEW",
+            "target_state": "COMPLETED"
+          }
+        ],
+        "outcome": "APPLIED",
+        "resulting_commit_seq": 39
+      }
+    }
+  },
+  "decision_rng": [
+    3,
+    [
+      161728737,
+      3215422222,
+      1087604699,
+      1030990369,
+      3548710806,
+      4073844860,
+      1992423388,
+      3063841280,
+      1733905189,
+      557607761,
+      773676548,
+      5729202,
+      3424252081,
+      2025577772,
+      2533793279,
+      4172213247,
+      1710416139,
+      2061942336,
+      903882048,
+      2792007941,
+      756765063,
+      4214671447,
+      3394036362,
+      1601743840,
+      2868199507,
+      2267611854,
+      1858319278,
+      3251234042,
+      759335369,
+      1459650738,
+      2255312121,
+      2062422905,
+      614126499,
+      1211302924,
+      489783655,
+      2728692665,
+      2685784877,
+      3537934658,
+      4172463161,
+      1371827262,
+      2106280598,
+      1795938245,
+      687826464,
+      3488940659,
+      1296320801,
+      4139248965,
+      3234015700,
+      1347167812,
+      777375501,
+      6583790,
+      1907654447,
+      1379798368,
+      1063266807,
+      2915805821,
+      3899588806,
+      697757012,
+      2615360378,
+      1132300294,
+      2883296638,
+      4194227784,
+      517730278,
+      2444104077,
+      2426900052,
+      99236086,
+      2049147126,
+      1067737895,
+      4124520907,
+      1485109077,
+      278671580,
+      3524958849,
+      440393530,
+      797381961,
+      3862756338,
+      3751591495,
+      1159112322,
+      1425730104,
+      1232184543,
+      271793311,
+      3119497229,
+      2777531392,
+      2576931284,
+      2027093311,
+      752592933,
+      3863726290,
+      3268332470,
+      3243069828,
+      936966647,
+      3945218701,
+      3222023772,
+      578304928,
+      1503742449,
+      2658555989,
+      531656921,
+      3527142174,
+      3194686768,
+      560823956,
+      297117340,
+      823948644,
+      723479621,
+      2671698367,
+      1745475229,
+      1120921640,
+      2121176439,
+      439159180,
+      2450532095,
+      3300345221,
+      3625023835,
+      3201155059,
+      4291485676,
+      3931276279,
+      3619014168,
+      2595980131,
+      1041408435,
+      194929109,
+      3231841678,
+      2962492273,
+      1698620817,
+      1837109819,
+      2985508368,
+      3088222144,
+      2200772656,
+      3593183248,
+      3254943393,
+      29768360,
+      3511808230,
+      2674312783,
+      856073878,
+      4195529122,
+      4065392841,
+      1126963647,
+      2908372476,
+      4043510464,
+      914979784,
+      1113172012,
+      2813712495,
+      4056425741,
+      4236683933,
+      4163707224,
+      3313406868,
+      3037769308,
+      1868733473,
+      2735050076,
+      3119431331,
+      3732955499,
+      1433406096,
+      349569872,
+      432183595,
+      1468401740,
+      528615079,
+      1166778187,
+      497455468,
+      743628426,
+      3482438262,
+      3753211656,
+      3183580194,
+      528955918,
+      4288154779,
+      618376905,
+      241670747,
+      3415882856,
+      3758500539,
+      3216852647,
+      2282145267,
+      2026083431,
+      104899394,
+      3192705700,
+      3478232407,
+      278542080,
+      1930702615,
+      1024411748,
+      3269541185,
+      496566160,
+      1626628905,
+      1349343628,
+      3688439578,
+      127670510,
+      3655637335,
+      2853916667,
+      812542434,
+      1863861980,
+      3869545853,
+      1406288223,
+      2858282850,
+      2663127765,
+      3788171743,
+      1227940718,
+      3227352182,
+      67911498,
+      812846080,
+      2958765414,
+      2807210276,
+      2327755783,
+      3101466223,
+      3006787940,
+      398970208,
+      2691857011,
+      1614029751,
+      3840601060,
+      680115661,
+      2384670400,
+      1973598798,
+      4089670135,
+      510272481,
+      3913934447,
+      2584146436,
+      3901167047,
+      395853437,
+      1164618335,
+      1774211330,
+      3584841941,
+      3158833420,
+      47279147,
+      1504340299,
+      673151367,
+      3670917160,
+      1271720298,
+      3247997279,
+      3229402516,
+      1411155367,
+      3476065197,
+      884164273,
+      2742598896,
+      3372006434,
+      1887312776,
+      4018498274,
+      3809991233,
+      2102953645,
+      211681983,
+      830862012,
+      1802370453,
+      1385376194,
+      2448234581,
+      2823504370,
+      4077345454,
+      4103634740,
+      3715533352,
+      3382782342,
+      663175903,
+      618007583,
+      2105870172,
+      367311312,
+      1061213284,
+      3791351662,
+      3616340611,
+      1512840107,
+      1157394573,
+      2925213676,
+      3958061411,
+      563760714,
+      3487602648,
+      467906090,
+      1930472335,
+      2934184408,
+      2851698206,
+      185142296,
+      4189930144,
+      1802253656,
+      95574545,
+      4021771032,
+      2416901443,
+      2758153066,
+      1235925333,
+      3664928348,
+      3288370201,
+      676134193,
+      3293959797,
+      3177727382,
+      166818832,
+      1854296194,
+      3167952676,
+      4248704824,
+      3756914709,
+      3441907407,
+      59019849,
+      1646517963,
+      612961838,
+      611853393,
+      102267712,
+      2226369218,
+      2462733451,
+      3015423265,
+      2161748912,
+      2243653462,
+      3550167335,
+      3760122922,
+      50123824,
+      1650311361,
+      2637774775,
+      47892743,
+      1674785611,
+      4277110379,
+      1996982373,
+      2912201531,
+      2024376829,
+      2832534203,
+      3467468099,
+      2594861690,
+      3265351174,
+      1155590314,
+      1149786780,
+      3321901788,
+      1236476403,
+      214372533,
+      1041910163,
+      2549890326,
+      1529984388,
+      3526028236,
+      852400878,
+      1516346277,
+      998890872,
+      3580503139,
+      4087192729,
+      267217049,
+      1434199084,
+      1986796645,
+      3377293930,
+      3370706920,
+      4138112908,
+      4159285838,
+      3962606687,
+      180609640,
+      438357694,
+      1153762630,
+      2824240133,
+      2222431419,
+      3195142681,
+      616049318,
+      3658419660,
+      496442053,
+      1281591332,
+      2309326501,
+      1255795551,
+      1117945260,
+      1040821791,
+      645448874,
+      3708389672,
+      1436026218,
+      1074592549,
+      1365387419,
+      1501267960,
+      30714840,
+      3067813985,
+      3936213348,
+      365225870,
+      4198175188,
+      3725161926,
+      3768704184,
+      1607538519,
+      440412153,
+      3930068887,
+      369204914,
+      4073780363,
+      2350897424,
+      2426394163,
+      2685489691,
+      3198969327,
+      3214795870,
+      1228774608,
+      288855137,
+      1318920247,
+      721138571,
+      2069159848,
+      1947188982,
+      415779250,
+      2529411741,
+      1464951163,
+      2589853686,
+      588057569,
+      256875397,
+      1888308169,
+      127399138,
+      1204673951,
+      61985830,
+      3165728870,
+      237822297,
+      3230216091,
+      3943638328,
+      194410929,
+      2963483682,
+      854803337,
+      843912497,
+      3430703193,
+      3319724434,
+      116906249,
+      3098763166,
+      1436178233,
+      4081087246,
+      4092526676,
+      3538942184,
+      3365577721,
+      199210289,
+      2092160347,
+      3558228917,
+      679214060,
+      4209262146,
+      3795679868,
+      3610610580,
+      832890742,
+      3216918474,
+      2599007856,
+      3860785047,
+      2316762617,
+      2936795796,
+      1876111757,
+      2341442106,
+      426718173,
+      895157478,
+      3169927777,
+      826144013,
+      226446157,
+      2163959509,
+      2512099634,
+      4109672792,
+      3983807192,
+      3170917837,
+      618898343,
+      1239517131,
+      2761955922,
+      4109746199,
+      636922361,
+      4104804983,
+      1893364134,
+      2839412656,
+      1954994859,
+      2351399796,
+      2238384651,
+      2002729803,
+      2045406334,
+      2187466195,
+      2612798313,
+      2892840192,
+      2620639280,
+      1762546746,
+      1672263792,
+      2725221188,
+      2597851831,
+      2235404784,
+      2854351196,
+      1768603800,
+      2424366425,
+      1470611166,
+      1335000085,
+      1521385747,
+      294066238,
+      1978354639,
+      3783591896,
+      2629822654,
+      4052149555,
+      988411329,
+      3719395619,
+      882181848,
+      1347996902,
+      2853881498,
+      2245851637,
+      2898727902,
+      1105266664,
+      1674707564,
+      1058840618,
+      364396251,
+      454274212,
+      1772550166,
+      2383773454,
+      1546291550,
+      778191239,
+      2758999156,
+      3481615564,
+      1167795290,
+      2151183241,
+      1204448700,
+      2021199855,
+      2144913671,
+      2486411223,
+      756954442,
+      2982326130,
+      2454653681,
+      647324591,
+      938273291,
+      3271195173,
+      171620578,
+      1088364302,
+      4267843235,
+      1872979550,
+      1533590947,
+      3656861925,
+      2978605270,
+      2531214398,
+      1064155295,
+      2688306404,
+      2034001676,
+      3945426260,
+      1696955179,
+      1506176971,
+      3104833862,
+      1632747359,
+      1277232400,
+      1822761809,
+      3180687274,
+      3896295478,
+      1303747788,
+      1546837089,
+      2596792564,
+      2457822581,
+      959985891,
+      1257245874,
+      422582386,
+      793578784,
+      2744608860,
+      1367384060,
+      2217917404,
+      3730306379,
+      3702378086,
+      983416904,
+      4260891231,
+      2115587439,
+      1391447019,
+      1397382368,
+      828074179,
+      2515378427,
+      4013545411,
+      1770293433,
+      1485097160,
+      3081990699,
+      3951803303,
+      2387029452,
+      1711255126,
+      4260263241,
+      171914848,
+      868119582,
+      3142807807,
+      1019523358,
+      3123872099,
+      915081304,
+      3204783911,
+      2842477401,
+      2126792487,
+      773194106,
+      747937930,
+      2240592862,
+      1617315432,
+      1718501618,
+      1633907394,
+      1606375957,
+      1294891715,
+      2300509759,
+      169853437,
+      3214434434,
+      753925282,
+      1587065691,
+      1148707091,
+      2581587160,
+      2957412296,
+      3622123212,
+      3615397962,
+      128272134,
+      1907232394,
+      219554502,
+      3908701956,
+      2634307096,
+      3319914080,
+      1569564796,
+      2879384371,
+      4149404717,
+      1036115173,
+      3354075765,
+      3887187464,
+      110524763,
+      3902108487,
+      2529806859,
+      4229673014,
+      3893453468,
+      4215992815,
+      671074619,
+      3846046633,
+      2270843315,
+      2839739802,
+      3947484778,
+      1153007111,
+      2957008235,
+      1103814082,
+      1359407498,
+      2301354191,
+      1916496358,
+      2610559523,
+      2454008810,
+      2426337950,
+      4138562438,
+      1176385878,
+      3976435317,
+      950889933,
+      4166453418,
+      142487700,
+      2658990048,
+      1893730671,
+      3533697373,
+      252193422,
+      3023314811,
+      3562906022,
+      2023993948,
+      1873223527,
+      1541635755,
+      2922292500,
+      2533470337,
+      805727286,
+      3495073866,
+      3987804189,
+      1578967086,
+      1982382583,
+      968539443,
+      2913812097,
+      3213869470,
+      4270400558,
+      2068813033,
+      889512416,
+      2179293974,
+      4210978740,
+      2106272826,
+      2769591391,
+      3760503016,
+      2555173785,
+      2398517934,
+      3850521820,
+      771027767,
+      1673080234,
+      1257037627,
+      20
+    ],
+    null
+  ],
+  "provider_version": "1.0.0"
+}

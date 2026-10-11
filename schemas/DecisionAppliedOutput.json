@@ -1,0 +1,111 @@
+{
+  "$defs": {
+    "DecisionOutput": {
+      "properties": {
+        "decision_id": {
+          "title": "Decision Id",
+          "type": "string"
+        },
+        "provider_id": {
+          "title": "Provider Id",
+          "type": "string"
+        },
+        "provider_version": {
+          "title": "Provider Version",
+          "type": "string"
+        },
+        "selected_option_id": {
+          "title": "Selected Option Id",
+          "type": "string"
+        },
+        "random_draw_index": {
+          "title": "Random Draw Index",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "decision_id",
+        "provider_id",
+        "provider_version",
+        "selected_option_id",
+        "random_draw_index"
+      ],
+      "title": "DecisionOutput",
+      "type": "object"
+    },
+    "TransitionIntent": {
+      "properties": {
+        "machine_type": {
+          "title": "Machine Type",
+          "type": "string"
+        },
+        "machine_id": {
+          "title": "Machine Id",
+          "type": "string"
+        },
+        "expected_revision": {
+          "title": "Expected Revision",
+          "type": "integer"
+        },
+        "from_state": {
+          "title": "From State",
+          "type": "string"
+        },
+        "target_state": {
+          "title": "Target State",
+          "type": "string"
+        }
+      },
+      "required": [
+        "machine_type",
+        "machine_id",
+        "expected_revision",
+        "from_state",
+        "target_state"
+      ],
+      "title": "TransitionIntent",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "decision": {
+      "$ref": "#/$defs/DecisionOutput"
+    },
+    "applied_intents": {
+      "items": {
+        "$ref": "#/$defs/TransitionIntent"
+      },
+      "title": "Applied Intents",
+      "type": "array"
+    },
+    "outcome": {
+      "enum": [
+        "APPLIED",
+        "STALE",
+        "REJECTED"
+      ],
+      "title": "Outcome",
+      "type": "string"
+    },
+    "resulting_commit_seq": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Resulting Commit Seq"
+    }
+  },
+  "required": [
+    "decision",
+    "applied_intents",
+    "outcome",
+    "resulting_commit_seq"
+  ],
+  "title": "DecisionAppliedOutput",
+  "type": "object"
+}

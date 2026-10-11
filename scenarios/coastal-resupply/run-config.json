@@ -1,0 +1,9 @@
+{
+  "scenario_start_utc": "2026-10-11T00:00:00Z",
+  "mesa_seed": 42,
+  "dt_ms": 1000,
+  "decision_provider": {
+    "type": "random",
+    "seed": 11577
+  }
+}
