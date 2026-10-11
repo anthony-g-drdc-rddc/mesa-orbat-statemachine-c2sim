@@ -4,7 +4,12 @@ from c2sim.api.app import create_app
 
 def test_api_create_choose_retry_control_export_restore(tmp_path, inputs):
     raw, spec, config = inputs
-    app = create_app(tmp_path / "api.sqlite", tmp_path / "exports", continuous=False)
+    app = create_app(
+        tmp_path / "api.sqlite",
+        tmp_path / "exports",
+        continuous=False,
+        log_root=tmp_path / "logs",
+    )
     with TestClient(app) as client:
         response = client.post(
             "/api/v1/runs",
@@ -14,6 +19,10 @@ def test_api_create_choose_retry_control_export_restore(tmp_path, inputs):
         assert response.status_code == 201, response.text
         run_id = response.json()["run_id"]
         base = f"/api/v1/runs/{run_id}"
+        assert response.json()["log_url"] == base + "/log"
+        run_log = client.get(base + "/log")
+        assert run_log.status_code == 200
+        assert "RunCreated" in run_log.text
         pending = client.get(base + "/decisions/current").json()
         body = {"decision_id": pending["decision_id"], "expected_commit_seq": pending["commit_seq"]}
         first = client.post(base + "/decisions/choose", json=body)

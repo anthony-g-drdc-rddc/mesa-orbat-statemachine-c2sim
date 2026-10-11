@@ -7,6 +7,7 @@ from c2sim.domain.records import Conflict, canonical, schedule
 from c2sim.domain.predicates import evaluate
 from c2sim.runtime.coordinator import Coordinator
 from c2sim.runtime.replay import verify_history
+from c2sim.runtime.run_logging import RunLogs
 from c2sim.persistence.repository import Repository
 from c2sim.services.core import POSITIONS, REPORTING
 from c2sim.services.tasking import create_task, request_disposition, transition_task
@@ -60,6 +61,28 @@ def test_reference_mission(repository, inputs):
     for decision in final["decisions"].values():
         assert all(g["allowed"] for g in decision["guard_results"])
         assert "units" not in decision["input"]  # no physical truth leaks through the port
+
+
+def test_per_run_log_records_committed_state_changes_and_movement(repository, inputs, tmp_path):
+    run_logs = RunLogs(tmp_path / "logs")
+    try:
+        coordinator = Coordinator(repository, run_logs=run_logs)
+        initial = coordinator.create(*inputs)
+        start(coordinator, initial["run_id"])
+        finish(coordinator, initial["run_id"])
+        content = run_logs.path(initial["run_id"]).read_text()
+    finally:
+        run_logs.close()
+
+    assert "RunCreated" in content
+    assert '"to_state": "RUNNING"' in content
+    assert "DecisionApplied" in content
+    assert "MissionTransition" in content
+    assert "TaskTransition" in content
+    assert "UnitMoved" in content
+    assert '"unit_id": "GROUND-1"' in content
+    assert '"displacement_m":' in content
+    assert "RunCompleted" in content
 
 
 def test_process_replacement_and_restore_preserve_physical_future(tmp_path, inputs):
@@ -129,8 +152,9 @@ def test_run_pause_freezes_everything_and_commands_are_idempotent(repository, in
     assert repository.load(run_id)["time_ms"] == 1000
 
 
-def test_interval_failure_does_not_publish_partial_state(repository, inputs, monkeypatch):
-    coordinator = Coordinator(repository)
+def test_interval_failure_does_not_publish_partial_state(repository, inputs, monkeypatch, tmp_path):
+    run_logs = RunLogs(tmp_path / "logs")
+    coordinator = Coordinator(repository, run_logs=run_logs)
     state = coordinator.create(*inputs)
     start(coordinator, state["run_id"])
     committed = repository.load(state["run_id"])
@@ -140,9 +164,16 @@ def test_interval_failure_does_not_publish_partial_state(repository, inputs, mon
         raise RuntimeError("Injected resolver failure")
 
     monkeypatch.setattr(C2SimulationModel, "resolve", fail)
-    with pytest.raises(RuntimeError):
-        coordinator.tick(state["run_id"])
-    assert repository.load(state["run_id"]) == committed
+    try:
+        with pytest.raises(RuntimeError):
+            coordinator.tick(state["run_id"])
+        assert repository.load(state["run_id"]) == committed
+        content = run_logs.path(state["run_id"]).read_text()
+        assert "BoundaryFailed" in content
+        assert "discarded_candidate" in content
+        assert "UnitResourcesChanged" not in content
+    finally:
+        run_logs.close()
 
 
 def test_database_failure_does_not_publish_choice(repository, inputs, monkeypatch):

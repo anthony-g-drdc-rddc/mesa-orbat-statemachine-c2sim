@@ -3,9 +3,9 @@
 import asyncio
 from contextlib import asynccontextmanager
 import json
-import logging
 import os
 from pathlib import Path
+from loguru import logger
 from fastapi import FastAPI, File, Form, HTTPException, Response, UploadFile
 from fastapi.responses import FileResponse, JSONResponse
 from pydantic import ValidationError
@@ -22,27 +22,36 @@ from c2sim.domain.records import Conflict, event
 from c2sim.persistence.repository import Repository
 from c2sim.runtime.coordinator import Coordinator, finalize, summary
 from c2sim.runtime.exports import export_run
+from c2sim.runtime.run_logging import RunLogs
 
-logger = logging.getLogger("c2sim")
 
-
-def create_app(database=None, export_root=None, continuous=True):
+def create_app(database=None, export_root=None, continuous=True, log_root=None):
     database = database or os.getenv("C2SIM_DATABASE", ".data/c2sim.sqlite")
     export_root = Path(export_root or os.getenv("C2SIM_EXPORT_ROOT", ".data/exports"))
+    log_root = Path(log_root or os.getenv("C2SIM_LOG_ROOT", ".data/logs"))
 
     @asynccontextmanager
     async def lifespan(app):
         repository = Repository(database)
-        coordinator = Coordinator(repository, os.getenv("C2SIM_SYSTEM_IDENTITY", "headless-system"))
-        app.state.repository, app.state.coordinator = repository, coordinator
+        run_logs = RunLogs(log_root)
+        coordinator = Coordinator(
+            repository,
+            os.getenv("C2SIM_SYSTEM_IDENTITY", "headless-system"),
+            run_logs=run_logs,
+        )
+        app.state.repository, app.state.coordinator, app.state.run_logs = (
+            repository,
+            coordinator,
+            run_logs,
+        )
 
         async def loop():
             while True:
                 for run_id in repository.run_ids():
                     try:
                         await asyncio.to_thread(coordinator.tick, run_id)
-                    except Exception:
-                        logger.exception("Simulation interval failed", extra={"run_id": run_id})
+                    except Exception as exc:
+                        logger.exception("Simulation interval failed for run {}", run_id)
                         # Recover the last committed boundary, then record a separate failure.
                         try:
                             with repository.mutex:
@@ -53,6 +62,14 @@ def create_app(database=None, export_root=None, continuous=True):
                                 event(last, "RunFailed", reason="INTERVAL_ERROR")
                                 finalize(last)
                                 repository.commit(last, seq)
+                                run_logs.committed(repository.load(run_id, seq), last)
+                                run_logs.write(
+                                    last,
+                                    "RunIntervalFailed",
+                                    level="ERROR",
+                                    exception=exc,
+                                    persisted_lifecycle="FAILED",
+                                )
                         except Exception:
                             logger.exception("Could not persist run failure")
                 await asyncio.sleep(0.05)
@@ -70,6 +87,7 @@ def create_app(database=None, export_root=None, continuous=True):
             # Wait for any to_thread interval still holding the writer lock.
             with repository.mutex:
                 repository.close()
+            run_logs.close()
 
     app = FastAPI(title="Mesa C2 Simulation", version="0.1.0", lifespan=lifespan)
 
@@ -106,6 +124,7 @@ def create_app(database=None, export_root=None, continuous=True):
             **{k: state[k] for k in ("run_id", "lifecycle", "control_revision", "scenario_hash")},
             "provider_id": "random",
             "provider_version": state["provider_version"],
+            "log_url": f"/api/v1/runs/{state['run_id']}/log",
         }
 
     @app.get("/api/v1/runs/{run_id}")
@@ -134,6 +153,14 @@ def create_app(database=None, export_root=None, continuous=True):
     @app.get("/api/v1/runs/{run_id}/state")
     def state(run_id: str):
         return app.state.repository.load(run_id)
+
+    @app.get("/api/v1/runs/{run_id}/log")
+    def run_log(run_id: str):
+        app.state.repository.load(run_id)
+        path = app.state.run_logs.path(run_id)
+        if not path.is_file():
+            raise HTTPException(404, "Run log is not available")
+        return FileResponse(path, filename=f"{run_id}.log", media_type="text/plain")
 
     @app.get("/api/v1/runs/{run_id}/checkpoints")
     def checkpoints(run_id: str):

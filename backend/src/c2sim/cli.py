@@ -7,11 +7,13 @@ from c2sim.contracts.scenario import ControlInput, RunCreateInput, ScenarioSpec
 from c2sim.persistence.repository import Repository
 from c2sim.runtime.coordinator import Coordinator
 from c2sim.runtime.exports import export_run
+from c2sim.runtime.run_logging import RunLogs
 
 
 def main():
     parser = argparse.ArgumentParser(prog="c2sim")
     parser.add_argument("--database", default=".data/c2sim.sqlite")
+    parser.add_argument("--log-root", default=".data/logs")
     sub = parser.add_subparsers(dest="command", required=True)
     demo = sub.add_parser("demo")
     demo.add_argument("--scenario", default="scenarios/coastal-resupply")
@@ -34,11 +36,17 @@ def main():
         import uvicorn
         from c2sim.api.app import create_app
 
-        uvicorn.run(create_app(database=args.database), host=args.host, port=args.port, workers=1)
+        uvicorn.run(
+            create_app(database=args.database, log_root=args.log_root),
+            host=args.host,
+            port=args.port,
+            workers=1,
+        )
         return
     repository = Repository(args.database)
+    run_logs = RunLogs(args.log_root)
     try:
-        coordinator = Coordinator(repository)
+        coordinator = Coordinator(repository, run_logs=run_logs)
         if args.command == "playback":
             print(json.dumps(repository.load(args.run_id, args.checkpoint), indent=2))
         elif args.command == "restore":
@@ -71,6 +79,7 @@ def main():
                         "lifecycle": state["lifecycle"],
                         "mission_state": state["mission"]["state"],
                         "time_ms": state["time_ms"],
+                        "log": str(run_logs.path(run_id)),
                         "exports": [str(directory / f) for f in files],
                     },
                     indent=2,
@@ -79,6 +88,7 @@ def main():
             if state["lifecycle"] == "RUNNING":
                 raise SystemExit("Step limit reached; run remains recoverable in database")
     finally:
+        run_logs.close()
         repository.close()
 
 

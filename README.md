@@ -11,7 +11,7 @@ uv sync --locked
 uv run c2sim demo
 ```
 
-The included seed completes the coastal-resupply mission: preliminary collection, main plan approval, the unavailable crossing, commander review, plan version 2, delivery of fifty supply units, and completion with receipt and accountability evidence. The CLI prints the run ID and paths to the exported files. A different seed can legitimately cancel or pause the mission:
+The included seed completes the coastal-resupply mission: preliminary collection, main plan approval, the unavailable crossing, commander review, plan version 2, delivery of fifty supply units, and completion with receipt and accountability evidence. The CLI prints the run ID, export paths, and its detailed `.data/logs/<run_id>.log` file. A different seed can legitimately cancel or pause the mission:
 
 ```bash
 uv run c2sim --database .data/experiment.sqlite demo --seed 42
@@ -46,7 +46,9 @@ curl -X POST http://127.0.0.1:6158/api/v1/runs/RUN_ID/controls \
 
 Commands require a unique `command_id`. An identical retry returns its original result; reusing an ID with different content fails. Controls use `expected_control_revision`; decision choices use `decision_id` and `expected_commit_seq`. A stale request returns HTTP 409. Callers cannot supply an option ID or install a decision provider.
 
-The API supports run summaries, full committed state, current and recorded decisions, controls, exports, checkpoint playback, and child-run restores. All routes are described in [the generated OpenAPI schema](schemas/openapi.json).
+The API supports run summaries, full committed state, current and recorded decisions, controls, exports, checkpoint playback, and child-run restores. The create response includes `log_url`; `GET /api/v1/runs/{run_id}/log` downloads the run's plain-text `.log` file. All routes are described in [the generated OpenAPI schema](schemas/openapi.json).
+
+Every run has a separate append-only diagnostic log under `.data/logs/` (or `C2SIM_LOG_ROOT`). It records lifecycle and mission transitions, random decisions and eligible options, task state changes, instructions, messages, reports, unit activity, resource changes, movement coordinates and distance, blocked routes, failures, and completion. Each line includes wall-clock time, commit number, simulated milliseconds, and scenario time. Simulation effects are logged after their checkpoint commits; a failed boundary is explicitly marked as a discarded candidate.
 
 A `READY` or run-`PAUSED` execution can accept a decision through `/decisions/choose` without advancing simulation time. Decisions only occur at workflow gates and delivered decision points; the runtime does not repeatedly draw while waiting for a report. The random provider selects uniformly from every permitted command-level option at each such point, including cancellation. A mission pause sends explicit delayed dispositions and prevents new starts; it is distinct from freezing the whole run.
 
@@ -93,7 +95,7 @@ docker compose -f deploy/compose.yaml up --build
 
 Compose starts the ORBAT Mapper interface at **http://localhost:6159/** alongside the backend. Use `docker compose -f deploy/compose.yaml up --build c2sim` if you only want the backend.
 
-The named `c2sim-data` volume retains the database and exports across container replacement. The service runs as an unprivileged user and binds its host port to loopback. The configured system identity is written to audit records. Authentication is outside this initial headless implementation.
+The named `c2sim-data` volume retains the database, exports, and per-run logs across container replacement. The service runs as an unprivileged user and binds its host port to loopback. The configured system identity is written to audit records. Authentication is outside this initial headless implementation.
 
 ## Development
 

@@ -25,6 +25,10 @@
     "provider_version": {
       "title": "Provider Version",
       "type": "string"
+    },
+    "log_url": {
+      "title": "Log Url",
+      "type": "string"
     }
   },
   "required": [
@@ -33,7 +37,8 @@
     "control_revision",
     "scenario_hash",
     "provider_id",
-    "provider_version"
+    "provider_version",
+    "log_url"
   ],
   "title": "RunCreateOutput",
   "type": "object"

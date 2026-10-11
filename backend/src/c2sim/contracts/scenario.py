@@ -192,6 +192,7 @@ class RunCreateOutput(StrictModel):
     scenario_hash: str
     provider_id: str
     provider_version: str
+    log_url: str
 
 
 class ControlInput(StrictModel):

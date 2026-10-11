@@ -360,25 +360,35 @@ def finalize(state):
 
 class Coordinator:
     def __init__(
-        self, repository, system_identity="headless-system", provider_factory=RandomDecisionProvider
+        self,
+        repository,
+        system_identity="headless-system",
+        provider_factory=RandomDecisionProvider,
+        run_logs=None,
     ):
         self.repository = repository
         self.system_identity = system_identity
         self.provider_factory = provider_factory
+        self.run_logs = run_logs
+
+    def _log_commit(self, previous, state):
+        if self.run_logs:
+            self.run_logs.committed(previous, state)
 
     def create(self, raw, spec, config):
         state = new_state(raw, spec, config, self.system_identity)
         self.repository.create(state)
+        self._log_commit(None, state)
         return state
 
     def choose(self, run_id, decision_id, expected_seq):
         with self.repository.mutex:
             state = self.repository.load(run_id)
-            previous = state["decisions"].get(decision_id)
-            if previous:
-                if previous["input"]["commit_seq"] != expected_seq:
+            recorded = state["decisions"].get(decision_id)
+            if recorded:
+                if recorded["input"]["commit_seq"] != expected_seq:
                     raise Conflict("Mismatched choose retry")
-                return previous["result"]
+                return recorded["result"]
             pending = state["pending_decision"]
             if (
                 not pending
@@ -386,22 +396,24 @@ class Coordinator:
                 or state["commit_seq"] != expected_seq
             ):
                 raise Conflict("Stale decision")
+            previous = deepcopy(state)
             provider = self.provider_factory(state["config"]["decision_provider"]["seed"])
             provider.setstate(state["decision_rng"])
             result = apply_choice(state, provider)
             state["decision_rng"] = provider.getstate()
             finalize(state)
             self.repository.commit(state, expected_seq)
+            self._log_commit(previous, state)
             return result
 
     def control(self, run_id, command):
         with self.repository.mutex:
             state = self.repository.load(run_id)
-            previous = state["commands"].get(command.command_id)
-            if previous:
-                if previous["input"] != command.model_dump():
+            recorded = state["commands"].get(command.command_id)
+            if recorded:
+                if recorded["input"] != command.model_dump():
                     raise Conflict("Command ID reused with different content")
-                return previous["result"]
+                return recorded["result"]
             if command.expected_control_revision != state["control_revision"]:
                 raise Conflict("Stale control revision")
             action, lifecycle = command.action, state["lifecycle"]
@@ -414,6 +426,7 @@ class Coordinator:
             }
             if lifecycle not in allowed[action]:
                 raise Conflict(f"Cannot {action} a {lifecycle} run")
+            previous = deepcopy(state)
             expected = state["commit_seq"]
             if action == "step":
                 boundary(state, self.provider_factory(state["config"]["decision_provider"]["seed"]))
@@ -433,6 +446,7 @@ class Coordinator:
                 "result": result,
             }
             self.repository.commit(state, expected)
+            self._log_commit(previous, state)
             return result
 
     def tick(self, run_id):
@@ -440,13 +454,23 @@ class Coordinator:
             state = self.repository.load(run_id)
             if state["lifecycle"] != "RUNNING":
                 return state
+            previous = deepcopy(state)
             expected = state["commit_seq"]
             try:
                 boundary(state, self.provider_factory(state["config"]["decision_provider"]["seed"]))
                 finalize(state)
                 self.repository.commit(state, expected)
-            except Exception:
+                self._log_commit(previous, state)
+            except Exception as exc:
                 # The candidate is discarded; no partial messages, effects or RNG are published.
+                if self.run_logs:
+                    self.run_logs.write(
+                        previous,
+                        "BoundaryFailed",
+                        level="ERROR",
+                        exception=exc,
+                        discarded_candidate=True,
+                    )
                 raise
             return state
 
@@ -469,6 +493,7 @@ class Coordinator:
             state["commands"] = {}
             refresh_decision(state)
             self.repository.create(state)
+            self._log_commit(None, state)
             return state
 
 

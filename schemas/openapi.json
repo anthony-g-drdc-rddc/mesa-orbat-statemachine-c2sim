@@ -312,6 +312,43 @@
         }
       }
     },
+    "/api/v1/runs/{run_id}/log": {
+      "get": {
+        "summary": "Run Log",
+        "operationId": "run_log_api_v1_runs__run_id__log_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/runs/{run_id}/checkpoints": {
       "get": {
         "summary": "Checkpoints",
@@ -744,6 +781,10 @@
           "provider_version": {
             "type": "string",
             "title": "Provider Version"
+          },
+          "log_url": {
+            "type": "string",
+            "title": "Log Url"
           }
         },
         "additionalProperties": false,
@@ -754,7 +795,8 @@
           "control_revision",
           "scenario_hash",
           "provider_id",
-          "provider_version"
+          "provider_version",
+          "log_url"
         ],
         "title": "RunCreateOutput"
       },
